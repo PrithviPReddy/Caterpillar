@@ -1,0 +1,9 @@
+# environment
+.venv/
+__pycache__/
+*.pyc
+.ruff_cache/
+.DS_Store
+
+# generated at runtime / by ml.train (regenerate with: python -m ml.train)
+data/

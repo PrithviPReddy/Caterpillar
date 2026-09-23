@@ -1,0 +1,43 @@
+{
+  "fleet": {
+    "end_stops_per_h": 20.0557,
+    "impacts_per_h": 7.1647,
+    "micro_pauses_per_h": 0.415,
+    "jerk": 0.3829,
+    "jerk_fresh": 0.2879,
+    "idle_frac": 0.1483,
+    "burn_lph": 21.7466
+  },
+  "operators": {
+    "OP1001": {
+      "end_stops_per_h": 12.4208,
+      "impacts_per_h": 4.1147,
+      "micro_pauses_per_h": 0.0,
+      "jerk": 0.28,
+      "jerk_fresh": 0.2078,
+      "idle_frac": 0.163,
+      "burn_lph": 21.608,
+      "days": 17
+    },
+    "OP1002": {
+      "end_stops_per_h": 46.7108,
+      "impacts_per_h": 15.1807,
+      "micro_pauses_per_h": 1.0257,
+      "jerk": 0.5531,
+      "jerk_fresh": 0.4472,
+      "idle_frac": 0.1193,
+      "burn_lph": 22.426,
+      "days": 20
+    },
+    "OP1003": {
+      "end_stops_per_h": 19.6878,
+      "impacts_per_h": 6.775,
+      "micro_pauses_per_h": 0.4324,
+      "jerk": 0.3822,
+      "jerk_fresh": 0.2876,
+      "idle_frac": 0.1843,
+      "burn_lph": 21.4788,
+      "days": 23
+    }
+  }
+}
