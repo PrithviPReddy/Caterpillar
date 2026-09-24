@@ -1,0 +1,2401 @@
+diff -ruN a/API_CONTRACT.md b/API_CONTRACT.md
+--- a/API_CONTRACT.md	2026-09-24 04:54:52
++++ b/API_CONTRACT.md	2026-09-24 11:23:01
+@@ -86,6 +86,7 @@
+ | `GET /v1/sessions/{session_id}/turns/{turn_id}` | Read a turn's status and stored result | `200` with `status` `processing`, `completed` or `failed` |
+ | `GET /v1/sessions/{session_id}/state` | Read tasks, incidents, training assignments, lessons, active and latest alert, pending question and `state_version` | `200` |
+ | `POST /v1/sessions/{session_id}/telemetry` | Post one **simulated** sensor sample | `200`. A repeat of the same `event_id` returns `duplicate: true`. `409` if the payload differs. |
++| `POST /v1/sessions/{session_id}/detections` | Post one lifecycle step of an alert found by the trusted **simulated** detector (D1) | `200`. A repeat of the same `detection_id` returns `duplicate: true`. `409` if the payload differs. `422 machine_state_unavailable` before the session's first telemetry sample. |
+ | `GET /v1/sessions/{session_id}/events?after={cursor}&limit=20` | Read retained announcements with `sequence > after`. Reading does not consume them. | `200` with `next_cursor` and `has_more` |
+ | `POST /v1/sessions/{session_id}/events/{event_id}/delivery` | Record a playback outcome, one record per `consumer_id` (last write wins) | `200` |
+ 
+@@ -99,7 +100,7 @@
+ | `GET /v1/me` | service principal (no associations) | own principal and own `catalog_verified` sessions | own principal, no associations, no sites |
+ | `POST /v1/sessions` | create/retrieve (catalog-bound) | 403 | 403 |
+ | `POST .../turns`, `GET .../turns/{turn_id}`, `GET .../state`, `GET .../events` | existing behaviour | own `catalog_verified` session only | 403 |
+-| `POST .../telemetry`, `POST .../events/{event_id}/delivery` | existing behaviour | 403 | 403 |
++| `POST .../telemetry`, `POST .../detections`, `POST .../events/{event_id}/delivery` | existing behaviour | 403 | 403 |
+ 
+ - **Sessions are created only by the trusted service**, because creation binds a room, participant and machine. An operator token uses a session the service already created for that operator. Holding a token does not prove ownership of any voice room. There is no token-bootstrap or room-discovery API; `GET /v1/me` lists the operator's own verified sessions.
+ - **Ownership:** an operator may use a session only if it is `catalog_verified` and its stored `operator_id` equals the token's operator. Anything else (another operator's session, a `legacy_unverified` session even with a matching free-text operator name, a non-existent session) gets the same `404 not_found "session not found"`, so existence is not revealed. The session is checked before the request body is parsed or any tool runs. Turn and event IDs are looked up inside that session only.
+@@ -176,10 +177,27 @@
+   - Repeated samples of the same condition create nothing.
+   - A clearing sample closes the episode and creates one low-priority `alert_cleared` announcement.
+   - The next violation starts a new episode.
++- **`seat_occupied` (optional reading, D1).** `false` means nobody is in the seat. The seatbelt and idle-unbelted rules then do not apply: an unattended running machine is not an unbelted operator. The prolonged-idle rule still applies. Omitted means unknown, and the rules behave exactly as before.
+ - Announcements are retained. Polling with `?after=` never consumes them.
+ - Delivery `status` is `played`, `interrupted`, `failed` or `expired`. **`played` is not acknowledgement.** Alert state (`active` or `cleared`) changes only through telemetry.
+ - The worker skips events that already have `played`, `interrupted` or `expired` from any consumer. It retries `failed` events until they expire. A crash between playback and the delivery report can therefore replay one announcement: delivery is not exactly-once audio.
+ 
++### Detections from the simulator's detection layer (D1)
++
++The simulator project (`cater`) runs its own detection layer on its simulated telemetry: fixed limits, trends, context-dependent safety checks, planning forecasts and ML health models. `POST /v1/sessions/{session_id}/detections` lets that trusted caller hand each alert episode to this backend. The alert then reaches the operator through the same episode, announcement and "Why?" path as this backend's own rules.
++
++- **Caller:** trusted service token only; operator and supervisor tokens get 403. `simulated` must be `true`.
++- **Episodes:** `episode_key` identifies one episode across its lifecycle (stored as `rule_id = detector:<episode_key>`), and at most one episode per key is active.
++  - `open` with `warning` or `critical` opens an episode and creates one `alert_started` announcement: `high` priority for warning, `critical` for critical. The speech is `speech` if sent, otherwise the title plus the first recommended action. An `open` for a key that is already active is recorded as `already_active`.
++  - `escalated` to a higher severity ends the active episode silently and opens a new one at the higher severity, with a new announcement. It is not higher otherwise (`not_higher`).
++  - `resolved` clears the active episode. Safety episodes that were announced get a low-priority `alert_cleared` announcement ("Cleared: <title>.").
++  - `update` and every `info` detection are recorded only: they never announce.
++  - A critical `safety` detection also creates an automatic incident draft linked to the episode, as the policy rules do.
++- **Evidence and "Why?":** the episode saves, once, the detection that opened it (`AlertEvidence.detection`: type, level, category, summary, signals with expected values and thresholds, prediction, training module, actions) plus the machine state of that moment (`readings`). `explanation` states the detection level and summary and labels it as simulated. "Why?" uses this saved evidence, never a later reading.
++- **Ordering:** detections share the session's telemetry lock. The session needs at least one telemetry sample first, otherwise `422 machine_state_unavailable`. Detections are keyed by their own lifecycle, not by the observation clock: they are never marked stale.
++- **Idempotency:** `(session_id, detection_id)`; the same payload returns the saved result with `duplicate: true`, a different payload is `409 idempotency_conflict`.
++- **Labels:** `source: detector`, `source_status: demo_assumption`, `policy_version` = the detector's generator string. These are simulated detections with representative limits, not validated machine safety logic.
++
+ ## Endpoint capability table (I01)
+ 
+ `implemented` means served by the running app today (v1, `contracts/openapi.yaml`). `proposed` means specified in `contracts/proposed/openapi.json` and **not served**. The stage column is the increment that implements it. Callers: *voice* = trusted voice service with the service token; *operator* / *supervisor* = scoped actor tokens (I02); *simulator* = trusted simulator service.
+@@ -193,6 +211,7 @@
+ | `GET /v1/sessions/{session_id}/turns/{turn_id}` | implemented | v1 | voice, operator | Authoritative status and saved result | Target I08: recovery fields (`last_sequence`, replay window, partial `generated_speech`). `cancelled` appears only for runs cancelled through the new cancel route. |
+ | `GET /v1/sessions/{session_id}/state` | implemented | v1 | voice, operator | Bound operator snapshot. B adds `shift`, `assigned_tasks`, `incident_drafts`, `pending_approvals`, `machine_state` (freshness), `idle_reasons` and `shift_briefing` | Target I02–I15: additive dashboard, structured incidents, operator alerts, learner progress, approvals, SOS and own wellbeing. Operator projection only. |
+ | `POST /v1/sessions/{session_id}/telemetry` | implemented | v1 | simulator | One simulated sample. B3 adds optional `operating_state`, `speed_kph` and `provenance`; results add `ignored_reason` and `drafts_created` | Target I05A: also accepts the typed `cocoon.telemetry.v2` batch. The v1 body stays valid. |
++| `POST /v1/sessions/{session_id}/detections` | implemented | D1 | simulator | Alert episodes found by the simulator's detection layer (rules + ML on simulated telemetry): open/escalated announce, resolved clears, update and info are recorded | Additive route. `Alert` gains optional `source`, `category`, `intelligence_level`; `AlertEvidence` gains optional `detection`; `alert_type` widens from three values to an open lower-snake string. |
+ | `GET /v1/sessions/{session_id}/events` | implemented | v1 | voice, operator | Poll retained announcements, exclusive `after` cursor. B4 adds type `shift_briefing` (one per seeded shift); B3 alerts come from three demo rules | Target I08A/I11: items gain `schema_version`, `speakable`, `correlation`, `provenance`; new announcement `type` values. |
+ | `POST /v1/sessions/{session_id}/events/{event_id}/delivery` | implemented | v1 | voice | Playback report per consumer | Target I08B: optional `delivery_id` makes attempts immutable. Without it, v1 last-write-wins is kept. |
+ | `POST /v1/sessions/{session_id}/turns/stream` | proposed | I08A | voice | Validate, accept durably, then stream `cocoon.turn-stream.v1` | Same `(session_id, turn_id)` identity as the JSON route. 200 = stream open, not action success. |
+diff -ruN a/contracts/examples/detection.request.json b/contracts/examples/detection.request.json
+--- a/contracts/examples/detection.request.json	1970-01-01 05:30:00
++++ b/contracts/examples/detection.request.json	2026-09-24 11:24:13
+@@ -0,0 +1,35 @@
++{
++  "detection_id": "cater-20260924T0200-EVT-000041",
++  "observed_at": "2026-09-24T02:00:30Z",
++  "simulated": true,
++  "episode_key": "EXC_DEMO_001:PROXIMITY:W02",
++  "status": "open",
++  "detection_type": "PROXIMITY_DANGER_ZONE",
++  "category": "safety",
++  "intelligence_level": "L5_contextual",
++  "severity": "critical",
++  "title": "Person inside the danger zone",
++  "summary": "Surveyor Chris D. (W02) is 3.2 m from EXC_DEMO_001 while it is swinging; danger radius 7.5 m.",
++  "recommended_actions": [
++    "Stop all motion now",
++    "Confirm the person is clear before resuming"
++  ],
++  "evidence": {
++    "distance_m": {
++      "value": 3.2,
++      "unit": "m",
++      "threshold": 7.5
++    },
++    "worker_role": {
++      "value": "Surveyor"
++    }
++  },
++  "training_module": {
++    "module_id": "TM-08",
++    "title": "Swing radius and ground crew awareness"
++  },
++  "provenance": {
++    "generator": "cater.detect.v1",
++    "source_event_id": "EVT-000041"
++  }
++}
+diff -ruN a/contracts/examples/detection.response.json b/contracts/examples/detection.response.json
+--- a/contracts/examples/detection.response.json	1970-01-01 05:30:00
++++ b/contracts/examples/detection.response.json	2026-09-24 11:24:13
+@@ -0,0 +1,110 @@
++{
++  "session_id": "ses_ad74a9e31afd4711bf9f2fb369c85b00",
++  "detection_id": "cater-20260924T0200-EVT-000041",
++  "duplicate": false,
++  "outcome": "alert_opened",
++  "ignored_reason": null,
++  "alert_id": "ALR-7c099ada1f3e",
++  "alerts_opened": [
++    "ALR-7c099ada1f3e"
++  ],
++  "alerts_cleared": [],
++  "announcements_created": [
++    "ann_ALR-7c099ada1f3e_start"
++  ],
++  "drafts_created": [
++    "DRF-0001"
++  ],
++  "active_alerts": [
++    {
++      "alert_id": "ALR-7c099ada1f3e",
++      "rule_id": "detector:EXC_DEMO_001:PROXIMITY:W02",
++      "alert_type": "proximity_danger_zone",
++      "source": "detector",
++      "category": "safety",
++      "intelligence_level": "L5_contextual",
++      "severity": "critical",
++      "status": "active",
++      "message": "Person inside the danger zone",
++      "explanation": "a safety check for the current situation fired: Surveyor Chris D. (W02) is 3.2 m from EXC_DEMO_001 while it is swinging; danger radius 7.5 m. This came from the simulator's detection layer (PROXIMITY_DANGER_ZONE, cater.detect.v1) on simulated data, not from a real machine.",
++      "simulated": true,
++      "trigger_readings": {
++        "engine_on": true,
++        "seatbelt_fastened": true,
++        "idle_seconds": 0,
++        "operating_state": "working",
++        "speed_kph": 0.0,
++        "seat_occupied": null
++      },
++      "started_at": "2026-09-24T02:00:30Z",
++      "cleared_at": null,
++      "policy_version": "cater.detect.v1",
++      "source_status": "demo_assumption",
++      "reason": "Person inside the danger zone",
++      "recommended_action": "Stop all motion now; Confirm the person is clear before resuming.",
++      "evidence": {
++        "event_id": "cater-20260924T0200-EVT-000041",
++        "observed_at": "2026-09-24T02:00:30Z",
++        "readings": {
++          "engine_on": true,
++          "seatbelt_fastened": true,
++          "idle_seconds": 0,
++          "operating_state": "working",
++          "speed_kph": 0.0,
++          "seat_occupied": null
++        },
++        "idle_since": null,
++        "idle_seconds_observed": null,
++        "machine_category": "hydraulic_excavator",
++        "applicability": "all_categories",
++        "detection": {
++          "detection_id": "cater-20260924T0200-EVT-000041",
++          "detection_type": "PROXIMITY_DANGER_ZONE",
++          "category": "safety",
++          "intelligence_level": "L5_contextual",
++          "title": "Person inside the danger zone",
++          "summary": "Surveyor Chris D. (W02) is 3.2 m from EXC_DEMO_001 while it is swinging; danger radius 7.5 m.",
++          "signals": {
++            "distance_m": {
++              "value": 3.2,
++              "unit": "m",
++              "threshold": 7.5,
++              "expected": null,
++              "deviation_sigma": null,
++              "trend_per_min": null,
++              "baseline": null,
++              "spn": null,
++              "note": null
++            },
++            "worker_role": {
++              "value": "Surveyor",
++              "unit": null,
++              "threshold": null,
++              "expected": null,
++              "deviation_sigma": null,
++              "trend_per_min": null,
++              "baseline": null,
++              "spn": null,
++              "note": null
++            }
++          },
++          "prediction": null,
++          "training_module": {
++            "module_id": "TM-08",
++            "title": "Swing radius and ground crew awareness"
++          },
++          "recommended_actions": [
++            "Stop all motion now",
++            "Confirm the person is clear before resuming"
++          ],
++          "generator": "cater.detect.v1"
++        }
++      },
++      "correlated_alert_id": null,
++      "draft_incident_id": "DRF-0001",
++      "training_assignment_id": null,
++      "announced": true
++    }
++  ],
++  "state_version": 1
++}
+diff -ruN a/contracts/openapi.yaml b/contracts/openapi.yaml
+--- a/contracts/openapi.yaml	2026-09-24 04:54:52
++++ b/contracts/openapi.yaml	2026-09-24 11:32:27
+@@ -575,6 +575,83 @@
+             application/json:
+               schema:
+                 $ref: '#/components/schemas/ErrorResponse'
++  /v1/sessions/{session_id}/detections:
++    post:
++      tags:
++      - telemetry
++      summary: Submit Detection
++      description: 'One lifecycle step of an alert episode found by the trusted external detector (simulated data
++        only).
++
++        open/escalated announce, resolved clears, update and info are recorded only. Needs a prior telemetry sample
++
++        in the session (422 machine_state_unavailable).'
++      operationId: submit_detection_v1_sessions__session_id__detections_post
++      security:
++      - HTTPBearer: []
++      parameters:
++      - name: session_id
++        in: path
++        required: true
++        schema:
++          type: string
++          title: Session Id
++      requestBody:
++        required: true
++        content:
++          application/json:
++            schema:
++              $ref: '#/components/schemas/DetectionRequest'
++      responses:
++        '200':
++          description: Successful Response
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/DetectionResult'
++        '401':
++          description: 'unauthorized: missing, malformed, unknown, expired or revoked bearer token, or more than
++            one Authorization header (the cause is deliberately not distinguished)'
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
++        '403':
++          description: 'forbidden: authenticated, but this role may not use the route'
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
++        '404':
++          description: Unknown session or resource; also returned for a session an operator does not own
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
++        '422':
++          description: Malformed request
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
++        '500':
++          description: Unexpected server error (retryable)
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
++        '503':
++          description: 'auth_unavailable: the token store could not be read (retryable; never treated as success)'
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
++        '409':
++          description: detection_id reused with a different payload
++          content:
++            application/json:
++              schema:
++                $ref: '#/components/schemas/ErrorResponse'
+   /v1/sessions/{session_id}/events:
+     get:
+       tags:
+@@ -783,11 +860,46 @@
+           title: Rule Id
+         alert_type:
+           type: string
+-          enum:
+-          - seatbelt_unfastened
+-          - prolonged_idle
+-          - idle_unbelted
++          pattern: ^[a-z][a-z0-9_]{1,63}$
+           title: Alert Type
++          description: 'Policy rules: seatbelt_unfastened, prolonged_idle or idle_unbelted. Detector alerts: the
++            detection type in lower case, e.g. proximity_danger_zone. Treat unknown values as opaque.'
++        source:
++          type: string
++          enum:
++          - policy_rule
++          - detector
++          title: Source
++          description: 'policy_rule: this backend''s safety policy; detector: POST .../detections.'
++          default: policy_rule
++        category:
++          anyOf:
++          - type: string
++            enum:
++            - safety
++            - machine_health
++            - fuel_energy
++            - productivity
++            - operator_behavior
++            - security
++            - planning
++            - sensor_health
++            - site
++          - type: 'null'
++          title: Category
++          description: Detector alerts only.
++        intelligence_level:
++          anyOf:
++          - type: string
++            enum:
++            - L1_threshold
++            - L2_trend
++            - L3_ml_pattern
++            - L4_predictive
++            - L5_contextual
++          - type: 'null'
++          title: Intelligence Level
++          description: Detector alerts only.
+         severity:
+           type: string
+           enum:
+@@ -924,6 +1036,12 @@
+           - category_listed
+           title: Applicability
+           default: all_categories
++        detection:
++          anyOf:
++          - $ref: '#/components/schemas/DetectionSnapshot'
++          - type: 'null'
++          description: 'Present for detector alerts: the detection that opened the episode. `readings` is then the
++            machine state at that moment.'
+       additionalProperties: false
+       type: object
+       required:
+@@ -1335,6 +1453,421 @@
+       - consumer_id
+       - status
+       title: DeliveryReport
++    DetectionPrediction:
++      properties:
++        kind:
++          type: string
++          maxLength: 40
++          title: Kind
++          description: e.g. time_to_threshold, fuel_runout, task_finish, rain_start.
++        eta:
++          anyOf:
++          - type: string
++            format: date-time
++          - type: 'null'
++          title: Eta
++        minutes_to_impact:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Minutes To Impact
++        value:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Value
++        unit:
++          anyOf:
++          - type: string
++            maxLength: 20
++          - type: 'null'
++          title: Unit
++      additionalProperties: false
++      type: object
++      required:
++      - kind
++      title: DetectionPrediction
++    DetectionProvenance:
++      properties:
++        generator:
++          type: string
++          maxLength: 80
++          title: Generator
++          description: Detector that produced this detection, with its version.
++        source_event_id:
++          anyOf:
++          - type: string
++            maxLength: 120
++          - type: 'null'
++          title: Source Event Id
++          description: The detector's own event ID.
++      additionalProperties: false
++      type: object
++      required:
++      - generator
++      title: DetectionProvenance
++    DetectionRequest:
++      properties:
++        detection_id:
++          type: string
++          pattern: ^[A-Za-z0-9][A-Za-z0-9._:\-]{0,127}$
++          title: Detection Id
++          description: Idempotency key within the session.
++          examples:
++          - lk-item_4f2c9a
++        observed_at:
++          type: string
++          format: date-time
++          title: Observed At
++          description: Observation time the detector saw it; normalised to UTC.
++        simulated:
++          type: boolean
++          const: true
++          title: Simulated
++          description: 'Must be true: detections come from simulated telemetry only.'
++        episode_key:
++          type: string
++          pattern: ^[A-Za-z0-9][A-Za-z0-9._:\-]{0,127}$
++          title: Episode Key
++          description: Stable across one episode's lifecycle; one active alert per key.
++          examples:
++          - lk-item_4f2c9a
++        status:
++          type: string
++          enum:
++          - open
++          - escalated
++          - update
++          - resolved
++          title: Status
++        detection_type:
++          type: string
++          pattern: ^[A-Z][A-Z0-9_]{1,63}$
++          title: Detection Type
++          examples:
++          - PROXIMITY_DANGER_ZONE
++        category:
++          type: string
++          enum:
++          - safety
++          - machine_health
++          - fuel_energy
++          - productivity
++          - operator_behavior
++          - security
++          - planning
++          - sensor_health
++          - site
++          title: Category
++        intelligence_level:
++          type: string
++          enum:
++          - L1_threshold
++          - L2_trend
++          - L3_ml_pattern
++          - L4_predictive
++          - L5_contextual
++          title: Intelligence Level
++        severity:
++          type: string
++          enum:
++          - info
++          - warning
++          - critical
++          title: Severity
++          description: info is recorded but never opens an alert or an announcement.
++        title:
++          type: string
++          maxLength: 120
++          minLength: 1
++          title: Title
++        summary:
++          type: string
++          maxLength: 600
++          minLength: 1
++          title: Summary
++          description: Deterministic sentence with the key numbers.
++        speech:
++          anyOf:
++          - type: string
++            maxLength: 300
++          - type: 'null'
++          title: Speech
++          description: 'Operator-facing announcement; default: title plus the first action.'
++        recommended_actions:
++          items:
++            type: string
++            maxLength: 200
++          type: array
++          maxItems: 5
++          title: Recommended Actions
++        evidence:
++          additionalProperties:
++            $ref: '#/components/schemas/DetectionSignal'
++          type: object
++          maxProperties: 20
++          title: Evidence
++        prediction:
++          anyOf:
++          - $ref: '#/components/schemas/DetectionPrediction'
++          - type: 'null'
++        training_module:
++          anyOf:
++          - $ref: '#/components/schemas/DetectionTraining'
++          - type: 'null'
++        provenance:
++          $ref: '#/components/schemas/DetectionProvenance'
++        one_shot:
++          type: boolean
++          title: One Shot
++          description: 'A point-in-time notice (e.g. a hot shutdown) with no lifecycle: an announced episode is
++            opened and closed at once, so it stays explainable but never active.'
++          default: false
++      additionalProperties: false
++      type: object
++      required:
++      - detection_id
++      - observed_at
++      - simulated
++      - episode_key
++      - status
++      - detection_type
++      - category
++      - intelligence_level
++      - severity
++      - title
++      - summary
++      - provenance
++      title: DetectionRequest
++      description: 'One lifecycle step of an alert episode found by an external, trusted detector (the simulator''s
++        detection
++
++        layer). The backend turns it into the same alert episode, announcement and "Why?" evidence as its own rules.'
++    DetectionResult:
++      properties:
++        session_id:
++          type: string
++          title: Session Id
++        detection_id:
++          type: string
++          title: Detection Id
++        duplicate:
++          type: boolean
++          title: Duplicate
++        outcome:
++          type: string
++          enum:
++          - alert_opened
++          - alert_escalated
++          - alert_cleared
++          - recorded
++          title: Outcome
++        ignored_reason:
++          anyOf:
++          - type: string
++            enum:
++            - below_announce_threshold
++            - already_active
++            - no_active_episode
++            - not_higher
++            - update_only
++          - type: 'null'
++          title: Ignored Reason
++          description: Why a recorded detection changed no alert.
++        alert_id:
++          anyOf:
++          - type: string
++          - type: 'null'
++          title: Alert Id
++          description: The episode this detection opened, escalated or cleared.
++        alerts_opened:
++          items:
++            type: string
++          type: array
++          title: Alerts Opened
++        alerts_cleared:
++          items:
++            type: string
++          type: array
++          title: Alerts Cleared
++        announcements_created:
++          items:
++            type: string
++          type: array
++          title: Announcements Created
++        drafts_created:
++          items:
++            type: string
++          type: array
++          title: Drafts Created
++        active_alerts:
++          items:
++            $ref: '#/components/schemas/Alert'
++          type: array
++          title: Active Alerts
++        state_version:
++          type: integer
++          title: State Version
++      additionalProperties: false
++      type: object
++      required:
++      - session_id
++      - detection_id
++      - duplicate
++      - outcome
++      - alerts_opened
++      - alerts_cleared
++      - announcements_created
++      - active_alerts
++      - state_version
++      title: DetectionResult
++    DetectionSignal:
++      properties:
++        value:
++          anyOf:
++          - type: number
++          - type: integer
++          - type: boolean
++          - type: string
++          - type: 'null'
++          title: Value
++        unit:
++          anyOf:
++          - type: string
++            maxLength: 20
++          - type: 'null'
++          title: Unit
++        threshold:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Threshold
++        expected:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Expected
++          description: Model-expected value for the current conditions.
++        deviation_sigma:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Deviation Sigma
++          description: Deviation from the model, in standard errors.
++        trend_per_min:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Trend Per Min
++        baseline:
++          anyOf:
++          - type: number
++          - type: 'null'
++          title: Baseline
++          description: Operator or fleet baseline for comparison.
++        spn:
++          anyOf:
++          - type: integer
++          - type: 'null'
++          title: Spn
++          description: J1939 suspect parameter number, where one applies.
++        note:
++          anyOf:
++          - type: string
++            maxLength: 200
++          - type: 'null'
++          title: Note
++      additionalProperties: false
++      type: object
++      required:
++      - value
++      title: DetectionSignal
++      description: One piece of evidence behind a detection. Only `value` is always present.
++    DetectionSnapshot:
++      properties:
++        detection_id:
++          type: string
++          title: Detection Id
++        detection_type:
++          type: string
++          title: Detection Type
++        category:
++          type: string
++          enum:
++          - safety
++          - machine_health
++          - fuel_energy
++          - productivity
++          - operator_behavior
++          - security
++          - planning
++          - sensor_health
++          - site
++          title: Category
++        intelligence_level:
++          type: string
++          enum:
++          - L1_threshold
++          - L2_trend
++          - L3_ml_pattern
++          - L4_predictive
++          - L5_contextual
++          title: Intelligence Level
++        title:
++          type: string
++          title: Title
++        summary:
++          type: string
++          title: Summary
++        signals:
++          additionalProperties:
++            $ref: '#/components/schemas/DetectionSignal'
++          type: object
++          title: Signals
++        prediction:
++          anyOf:
++          - $ref: '#/components/schemas/DetectionPrediction'
++          - type: 'null'
++        training_module:
++          anyOf:
++          - $ref: '#/components/schemas/DetectionTraining'
++          - type: 'null'
++        recommended_actions:
++          items:
++            type: string
++          type: array
++          title: Recommended Actions
++        generator:
++          type: string
++          title: Generator
++      additionalProperties: false
++      type: object
++      required:
++      - detection_id
++      - detection_type
++      - category
++      - intelligence_level
++      - title
++      - summary
++      - generator
++      title: DetectionSnapshot
++      description: The detection that opened an episode, saved once as the episode's evidence.
++    DetectionTraining:
++      properties:
++        module_id:
++          type: string
++          maxLength: 20
++          title: Module Id
++        title:
++          type: string
++          maxLength: 120
++          title: Title
++      additionalProperties: false
++      type: object
++      required:
++      - module_id
++      - title
++      title: DetectionTraining
+     ErrorBody:
+       properties:
+         code:
+@@ -1355,6 +1888,7 @@
+           - auth_unavailable
+           - version_conflict
+           - invalid_transition
++          - machine_state_unavailable
+           title: Code
+         message:
+           type: string
+@@ -2821,6 +3355,13 @@
+           - type: 'null'
+           title: Speed Kph
+           description: Observed ground speed (motion).
++        seat_occupied:
++          anyOf:
++          - type: boolean
++          - type: 'null'
++          title: Seat Occupied
++          description: 'Operator seat switch. false = nobody in the seat, so seatbelt rules do not apply (an unattended
++            machine is not an unbelted operator). Omitted = unknown: rules behave as before.'
+       additionalProperties: false
+       type: object
+       required:
+diff -ruN a/contracts/proposed/openapi.json b/contracts/proposed/openapi.json
+--- a/contracts/proposed/openapi.json	2026-09-24 04:54:52
++++ b/contracts/proposed/openapi.json	2026-09-24 11:32:27
+@@ -717,6 +717,130 @@
+         ]
+       }
+     },
++    "/v1/sessions/{session_id}/detections": {
++      "post": {
++        "tags": [
++          "telemetry"
++        ],
++        "summary": "Submit Detection",
++        "description": "One lifecycle step of an alert episode found by the trusted external detector (simulated data only).\nopen/escalated announce, resolved clears, update and info are recorded only. Needs a prior telemetry sample\nin the session (422 machine_state_unavailable).",
++        "operationId": "submit_detection_v1_sessions__session_id__detections_post",
++        "security": [
++          {
++            "HTTPBearer": []
++          }
++        ],
++        "parameters": [
++          {
++            "name": "session_id",
++            "in": "path",
++            "required": true,
++            "schema": {
++              "type": "string",
++              "title": "Session Id"
++            }
++          }
++        ],
++        "requestBody": {
++          "required": true,
++          "content": {
++            "application/json": {
++              "schema": {
++                "$ref": "#/components/schemas/DetectionRequest"
++              }
++            }
++          }
++        },
++        "responses": {
++          "200": {
++            "description": "Successful Response",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/DetectionResult"
++                }
++              }
++            }
++          },
++          "401": {
++            "description": "unauthorized: missing, malformed, unknown, expired or revoked bearer token, or more than one Authorization header (the cause is deliberately not distinguished)",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          },
++          "403": {
++            "description": "forbidden: authenticated, but this role may not use the route",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          },
++          "404": {
++            "description": "Unknown session or resource; also returned for a session an operator does not own",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          },
++          "422": {
++            "description": "Malformed request",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          },
++          "500": {
++            "description": "Unexpected server error (retryable)",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          },
++          "503": {
++            "description": "auth_unavailable: the token store could not be read (retryable; never treated as success)",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          },
++          "409": {
++            "description": "detection_id reused with a different payload",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "$ref": "#/components/schemas/ErrorResponse"
++                }
++              }
++            }
++          }
++        },
++        "x-implementation-status": "implemented",
++        "x-target-stage": "D1",
++        "x-callers": [
++          "simulator"
++        ],
++        "x-idempotency": "(session_id, detection_id); same payload → duplicate:true, different payload → 409. One active episode per episode_key. Needs a prior telemetry sample (422 machine_state_unavailable)"
++      }
++    },
+     "/v1/sessions/{session_id}/events": {
+       "get": {
+         "tags": [
+@@ -3061,13 +3185,62 @@
+           },
+           "alert_type": {
+             "type": "string",
++            "pattern": "^[a-z][a-z0-9_]{1,63}$",
++            "title": "Alert Type",
++            "description": "Policy rules: seatbelt_unfastened, prolonged_idle or idle_unbelted. Detector alerts: the detection type in lower case, e.g. proximity_danger_zone. Treat unknown values as opaque."
++          },
++          "source": {
++            "type": "string",
+             "enum": [
+-              "seatbelt_unfastened",
+-              "prolonged_idle",
+-              "idle_unbelted"
++              "policy_rule",
++              "detector"
+             ],
+-            "title": "Alert Type"
++            "title": "Source",
++            "description": "policy_rule: this backend's safety policy; detector: POST .../detections.",
++            "default": "policy_rule"
+           },
++          "category": {
++            "anyOf": [
++              {
++                "type": "string",
++                "enum": [
++                  "safety",
++                  "machine_health",
++                  "fuel_energy",
++                  "productivity",
++                  "operator_behavior",
++                  "security",
++                  "planning",
++                  "sensor_health",
++                  "site"
++                ]
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Category",
++            "description": "Detector alerts only."
++          },
++          "intelligence_level": {
++            "anyOf": [
++              {
++                "type": "string",
++                "enum": [
++                  "L1_threshold",
++                  "L2_trend",
++                  "L3_ml_pattern",
++                  "L4_predictive",
++                  "L5_contextual"
++                ]
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Intelligence Level",
++            "description": "Detector alerts only."
++          },
+           "severity": {
+             "type": "string",
+             "enum": [
+@@ -3422,6 +3595,17 @@
+             ],
+             "title": "Applicability",
+             "default": "all_categories"
++          },
++          "detection": {
++            "anyOf": [
++              {
++                "$ref": "#/components/schemas/DetectionSnapshot"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "description": "Present for detector alerts: the detection that opened the episode. `readings` is then the machine state at that moment."
+           }
+         },
+         "additionalProperties": false,
+@@ -6437,6 +6621,628 @@
+         ],
+         "title": "DeliveryReport"
+       },
++      "DetectionPrediction": {
++        "properties": {
++          "kind": {
++            "type": "string",
++            "maxLength": 40,
++            "title": "Kind",
++            "description": "e.g. time_to_threshold, fuel_runout, task_finish, rain_start."
++          },
++          "eta": {
++            "anyOf": [
++              {
++                "type": "string",
++                "format": "date-time"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Eta"
++          },
++          "minutes_to_impact": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Minutes To Impact"
++          },
++          "value": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Value"
++          },
++          "unit": {
++            "anyOf": [
++              {
++                "type": "string",
++                "maxLength": 20
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Unit"
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "kind"
++        ],
++        "title": "DetectionPrediction"
++      },
++      "DetectionProvenance": {
++        "properties": {
++          "generator": {
++            "type": "string",
++            "maxLength": 80,
++            "title": "Generator",
++            "description": "Detector that produced this detection, with its version."
++          },
++          "source_event_id": {
++            "anyOf": [
++              {
++                "type": "string",
++                "maxLength": 120
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Source Event Id",
++            "description": "The detector's own event ID."
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "generator"
++        ],
++        "title": "DetectionProvenance"
++      },
++      "DetectionRequest": {
++        "properties": {
++          "detection_id": {
++            "type": "string",
++            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:\\-]{0,127}$",
++            "title": "Detection Id",
++            "description": "Idempotency key within the session.",
++            "examples": [
++              "lk-item_4f2c9a"
++            ]
++          },
++          "observed_at": {
++            "type": "string",
++            "format": "date-time",
++            "title": "Observed At",
++            "description": "Observation time the detector saw it; normalised to UTC."
++          },
++          "simulated": {
++            "type": "boolean",
++            "const": true,
++            "title": "Simulated",
++            "description": "Must be true: detections come from simulated telemetry only."
++          },
++          "episode_key": {
++            "type": "string",
++            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:\\-]{0,127}$",
++            "title": "Episode Key",
++            "description": "Stable across one episode's lifecycle; one active alert per key.",
++            "examples": [
++              "lk-item_4f2c9a"
++            ]
++          },
++          "status": {
++            "type": "string",
++            "enum": [
++              "open",
++              "escalated",
++              "update",
++              "resolved"
++            ],
++            "title": "Status"
++          },
++          "detection_type": {
++            "type": "string",
++            "pattern": "^[A-Z][A-Z0-9_]{1,63}$",
++            "title": "Detection Type",
++            "examples": [
++              "PROXIMITY_DANGER_ZONE"
++            ]
++          },
++          "category": {
++            "type": "string",
++            "enum": [
++              "safety",
++              "machine_health",
++              "fuel_energy",
++              "productivity",
++              "operator_behavior",
++              "security",
++              "planning",
++              "sensor_health",
++              "site"
++            ],
++            "title": "Category"
++          },
++          "intelligence_level": {
++            "type": "string",
++            "enum": [
++              "L1_threshold",
++              "L2_trend",
++              "L3_ml_pattern",
++              "L4_predictive",
++              "L5_contextual"
++            ],
++            "title": "Intelligence Level"
++          },
++          "severity": {
++            "type": "string",
++            "enum": [
++              "info",
++              "warning",
++              "critical"
++            ],
++            "title": "Severity",
++            "description": "info is recorded but never opens an alert or an announcement."
++          },
++          "title": {
++            "type": "string",
++            "maxLength": 120,
++            "minLength": 1,
++            "title": "Title"
++          },
++          "summary": {
++            "type": "string",
++            "maxLength": 600,
++            "minLength": 1,
++            "title": "Summary",
++            "description": "Deterministic sentence with the key numbers."
++          },
++          "speech": {
++            "anyOf": [
++              {
++                "type": "string",
++                "maxLength": 300
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Speech",
++            "description": "Operator-facing announcement; default: title plus the first action."
++          },
++          "recommended_actions": {
++            "items": {
++              "type": "string",
++              "maxLength": 200
++            },
++            "type": "array",
++            "maxItems": 5,
++            "title": "Recommended Actions"
++          },
++          "evidence": {
++            "additionalProperties": {
++              "$ref": "#/components/schemas/DetectionSignal"
++            },
++            "type": "object",
++            "maxProperties": 20,
++            "title": "Evidence"
++          },
++          "prediction": {
++            "anyOf": [
++              {
++                "$ref": "#/components/schemas/DetectionPrediction"
++              },
++              {
++                "type": "null"
++              }
++            ]
++          },
++          "training_module": {
++            "anyOf": [
++              {
++                "$ref": "#/components/schemas/DetectionTraining"
++              },
++              {
++                "type": "null"
++              }
++            ]
++          },
++          "provenance": {
++            "$ref": "#/components/schemas/DetectionProvenance"
++          },
++          "one_shot": {
++            "type": "boolean",
++            "title": "One Shot",
++            "description": "A point-in-time notice (e.g. a hot shutdown) with no lifecycle: an announced episode is opened and closed at once, so it stays explainable but never active.",
++            "default": false
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "detection_id",
++          "observed_at",
++          "simulated",
++          "episode_key",
++          "status",
++          "detection_type",
++          "category",
++          "intelligence_level",
++          "severity",
++          "title",
++          "summary",
++          "provenance"
++        ],
++        "title": "DetectionRequest",
++        "description": "One lifecycle step of an alert episode found by an external, trusted detector (the simulator's detection\nlayer). The backend turns it into the same alert episode, announcement and \"Why?\" evidence as its own rules."
++      },
++      "DetectionResult": {
++        "properties": {
++          "session_id": {
++            "type": "string",
++            "title": "Session Id"
++          },
++          "detection_id": {
++            "type": "string",
++            "title": "Detection Id"
++          },
++          "duplicate": {
++            "type": "boolean",
++            "title": "Duplicate"
++          },
++          "outcome": {
++            "type": "string",
++            "enum": [
++              "alert_opened",
++              "alert_escalated",
++              "alert_cleared",
++              "recorded"
++            ],
++            "title": "Outcome"
++          },
++          "ignored_reason": {
++            "anyOf": [
++              {
++                "type": "string",
++                "enum": [
++                  "below_announce_threshold",
++                  "already_active",
++                  "no_active_episode",
++                  "not_higher",
++                  "update_only"
++                ]
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Ignored Reason",
++            "description": "Why a recorded detection changed no alert."
++          },
++          "alert_id": {
++            "anyOf": [
++              {
++                "type": "string"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Alert Id",
++            "description": "The episode this detection opened, escalated or cleared."
++          },
++          "alerts_opened": {
++            "items": {
++              "type": "string"
++            },
++            "type": "array",
++            "title": "Alerts Opened"
++          },
++          "alerts_cleared": {
++            "items": {
++              "type": "string"
++            },
++            "type": "array",
++            "title": "Alerts Cleared"
++          },
++          "announcements_created": {
++            "items": {
++              "type": "string"
++            },
++            "type": "array",
++            "title": "Announcements Created"
++          },
++          "drafts_created": {
++            "items": {
++              "type": "string"
++            },
++            "type": "array",
++            "title": "Drafts Created"
++          },
++          "active_alerts": {
++            "items": {
++              "$ref": "#/components/schemas/Alert"
++            },
++            "type": "array",
++            "title": "Active Alerts"
++          },
++          "state_version": {
++            "type": "integer",
++            "title": "State Version"
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "session_id",
++          "detection_id",
++          "duplicate",
++          "outcome",
++          "alerts_opened",
++          "alerts_cleared",
++          "announcements_created",
++          "active_alerts",
++          "state_version"
++        ],
++        "title": "DetectionResult"
++      },
++      "DetectionSignal": {
++        "properties": {
++          "value": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "integer"
++              },
++              {
++                "type": "boolean"
++              },
++              {
++                "type": "string"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Value"
++          },
++          "unit": {
++            "anyOf": [
++              {
++                "type": "string",
++                "maxLength": 20
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Unit"
++          },
++          "threshold": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Threshold"
++          },
++          "expected": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Expected",
++            "description": "Model-expected value for the current conditions."
++          },
++          "deviation_sigma": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Deviation Sigma",
++            "description": "Deviation from the model, in standard errors."
++          },
++          "trend_per_min": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Trend Per Min"
++          },
++          "baseline": {
++            "anyOf": [
++              {
++                "type": "number"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Baseline",
++            "description": "Operator or fleet baseline for comparison."
++          },
++          "spn": {
++            "anyOf": [
++              {
++                "type": "integer"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Spn",
++            "description": "J1939 suspect parameter number, where one applies."
++          },
++          "note": {
++            "anyOf": [
++              {
++                "type": "string",
++                "maxLength": 200
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Note"
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "value"
++        ],
++        "title": "DetectionSignal",
++        "description": "One piece of evidence behind a detection. Only `value` is always present."
++      },
++      "DetectionSnapshot": {
++        "properties": {
++          "detection_id": {
++            "type": "string",
++            "title": "Detection Id"
++          },
++          "detection_type": {
++            "type": "string",
++            "title": "Detection Type"
++          },
++          "category": {
++            "type": "string",
++            "enum": [
++              "safety",
++              "machine_health",
++              "fuel_energy",
++              "productivity",
++              "operator_behavior",
++              "security",
++              "planning",
++              "sensor_health",
++              "site"
++            ],
++            "title": "Category"
++          },
++          "intelligence_level": {
++            "type": "string",
++            "enum": [
++              "L1_threshold",
++              "L2_trend",
++              "L3_ml_pattern",
++              "L4_predictive",
++              "L5_contextual"
++            ],
++            "title": "Intelligence Level"
++          },
++          "title": {
++            "type": "string",
++            "title": "Title"
++          },
++          "summary": {
++            "type": "string",
++            "title": "Summary"
++          },
++          "signals": {
++            "additionalProperties": {
++              "$ref": "#/components/schemas/DetectionSignal"
++            },
++            "type": "object",
++            "title": "Signals"
++          },
++          "prediction": {
++            "anyOf": [
++              {
++                "$ref": "#/components/schemas/DetectionPrediction"
++              },
++              {
++                "type": "null"
++              }
++            ]
++          },
++          "training_module": {
++            "anyOf": [
++              {
++                "$ref": "#/components/schemas/DetectionTraining"
++              },
++              {
++                "type": "null"
++              }
++            ]
++          },
++          "recommended_actions": {
++            "items": {
++              "type": "string"
++            },
++            "type": "array",
++            "title": "Recommended Actions"
++          },
++          "generator": {
++            "type": "string",
++            "title": "Generator"
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "detection_id",
++          "detection_type",
++          "category",
++          "intelligence_level",
++          "title",
++          "summary",
++          "generator"
++        ],
++        "title": "DetectionSnapshot",
++        "description": "The detection that opened an episode, saved once as the episode's evidence."
++      },
++      "DetectionTraining": {
++        "properties": {
++          "module_id": {
++            "type": "string",
++            "maxLength": 20,
++            "title": "Module Id"
++          },
++          "title": {
++            "type": "string",
++            "maxLength": 120,
++            "title": "Title"
++          }
++        },
++        "additionalProperties": false,
++        "type": "object",
++        "required": [
++          "module_id",
++          "title"
++        ],
++        "title": "DetectionTraining"
++      },
+       "DurationEstimate": {
+         "additionalProperties": false,
+         "properties": {
+@@ -6831,7 +7637,8 @@
+               "forbidden",
+               "auth_unavailable",
+               "version_conflict",
+-              "invalid_transition"
++              "invalid_transition",
++              "machine_state_unavailable"
+             ],
+             "title": "Code"
+           },
+@@ -15471,6 +16278,18 @@
+             ],
+             "title": "Speed Kph",
+             "description": "Observed ground speed (motion)."
++          },
++          "seat_occupied": {
++            "anyOf": [
++              {
++                "type": "boolean"
++              },
++              {
++                "type": "null"
++              }
++            ],
++            "title": "Seat Occupied",
++            "description": "Operator seat switch. false = nobody in the seat, so seatbelt rules do not apply (an unattended machine is not an unbelted operator). Omitted = unknown: rules behave as before."
+           }
+         },
+         "additionalProperties": false,
+diff -ruN a/langgraph-agent/cocoon_agent/api/app.py b/langgraph-agent/cocoon_agent/api/app.py
+--- a/langgraph-agent/cocoon_agent/api/app.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/api/app.py	2026-09-24 11:21:27
+@@ -296,6 +296,15 @@
+     async def submit_telemetry(session_id: str, body: s.TelemetryRequest, service: Service) -> s.TelemetryResult:
+         return await service.submit_telemetry(session_id, body)
+ 
++    @app.post("/v1/sessions/{session_id}/detections", response_model=s.DetectionResult, tags=["telemetry"],
++              **v1({409: {"model": s.ErrorResponse, "description": "detection_id reused with a different payload"}},
++                   access=ServiceCaller))
++    async def submit_detection(session_id: str, body: s.DetectionRequest, service: Service) -> s.DetectionResult:
++        """One lifecycle step of an alert episode found by the trusted external detector (simulated data only).
++        open/escalated announce, resolved clears, update and info are recorded only. Needs a prior telemetry sample
++        in the session (422 machine_state_unavailable)."""
++        return await service.submit_detection(session_id, body)
++
+     # ------------------------------------------------------------------ announcements
+ 
+     @app.get("/v1/sessions/{session_id}/events", response_model=s.EventsPage, tags=["announcements"],
+diff -ruN a/langgraph-agent/cocoon_agent/api/schemas.py b/langgraph-agent/cocoon_agent/api/schemas.py
+--- a/langgraph-agent/cocoon_agent/api/schemas.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/api/schemas.py	2026-09-24 11:32:26
+@@ -39,6 +39,7 @@
+     "auth_unavailable",
+     "version_conflict",
+     "invalid_transition",
++    "machine_state_unavailable",
+ ]
+ 
+ 
+@@ -293,8 +294,117 @@
+     operating_state: OperatingState | None = Field(
+         default=None, description="Observed machine state. Omitted = unknown: idle rules neither open nor clear.")
+     speed_kph: float | None = Field(default=None, ge=0, le=100, description="Observed ground speed (motion).")
++    seat_occupied: bool | None = Field(
++        default=None, description="Operator seat switch. false = nobody in the seat, so seatbelt rules do not apply "
++                                  "(an unattended machine is not an unbelted operator). Omitted = unknown: rules "
++                                  "behave as before.")
+ 
+ 
++# --------------------------------------------------------------------------- detections (external detector)
++
++DetectionCategory = Literal["safety", "machine_health", "fuel_energy", "productivity", "operator_behavior",
++                            "security", "planning", "sensor_health", "site"]
++IntelligenceLevel = Literal["L1_threshold", "L2_trend", "L3_ml_pattern", "L4_predictive", "L5_contextual"]
++
++
++class DetectionSignal(ContractModel):
++    """One piece of evidence behind a detection. Only `value` is always present."""
++
++    value: float | int | bool | str | None
++    unit: str | None = Field(default=None, max_length=20)
++    threshold: float | None = None
++    expected: float | None = Field(default=None, description="Model-expected value for the current conditions.")
++    deviation_sigma: float | None = Field(default=None, description="Deviation from the model, in standard errors.")
++    trend_per_min: float | None = None
++    baseline: float | None = Field(default=None, description="Operator or fleet baseline for comparison.")
++    spn: int | None = Field(default=None, description="J1939 suspect parameter number, where one applies.")
++    note: str | None = Field(default=None, max_length=200)
++
++
++class DetectionPrediction(ContractModel):
++    kind: str = Field(max_length=40, description="e.g. time_to_threshold, fuel_runout, task_finish, rain_start.")
++    eta: AwareDatetime | None = None
++    minutes_to_impact: float | None = None
++    value: float | None = None
++    unit: str | None = Field(default=None, max_length=20)
++
++
++class DetectionTraining(ContractModel):
++    module_id: str = Field(max_length=20)
++    title: str = Field(max_length=120)
++
++
++class DetectionProvenance(ContractModel):
++    generator: str = Field(max_length=80, description="Detector that produced this detection, with its version.")
++    source_event_id: str | None = Field(default=None, max_length=120, description="The detector's own event ID.")
++
++
++class DetectionRequest(ContractModel):
++    """One lifecycle step of an alert episode found by an external, trusted detector (the simulator's detection
++    layer). The backend turns it into the same alert episode, announcement and "Why?" evidence as its own rules."""
++
++    detection_id: StableId = Field(description="Idempotency key within the session.")
++    observed_at: AwareDatetime = Field(description="Observation time the detector saw it; normalised to UTC.")
++    simulated: Literal[True] = Field(description="Must be true: detections come from simulated telemetry only.")
++    episode_key: StableId = Field(description="Stable across one episode's lifecycle; one active alert per key.")
++    status: Literal["open", "escalated", "update", "resolved"]
++    detection_type: str = Field(pattern=r"^[A-Z][A-Z0-9_]{1,63}$", examples=["PROXIMITY_DANGER_ZONE"])
++    category: DetectionCategory
++    intelligence_level: IntelligenceLevel
++    severity: Literal["info", "warning", "critical"] = Field(
++        description="info is recorded but never opens an alert or an announcement.")
++    title: str = Field(min_length=1, max_length=120)
++    summary: str = Field(min_length=1, max_length=600, description="Deterministic sentence with the key numbers.")
++    speech: str | None = Field(default=None, max_length=300,
++                               description="Operator-facing announcement; default: title plus the first action.")
++    recommended_actions: list[Annotated[str, Field(max_length=200)]] = Field(default_factory=list, max_length=5)
++    evidence: dict[str, DetectionSignal] = Field(default_factory=dict, max_length=20)
++    prediction: DetectionPrediction | None = None
++    training_module: DetectionTraining | None = None
++    provenance: DetectionProvenance
++    one_shot: bool = Field(
++        default=False, description="A point-in-time notice (e.g. a hot shutdown) with no lifecycle: an announced "
++                                   "episode is opened and closed at once, so it stays explainable but never active.")
++
++    @field_validator("observed_at")
++    @classmethod
++    def _to_utc(cls, value: datetime) -> datetime:
++        return value.astimezone(timezone.utc)
++
++
++class DetectionSnapshot(ContractModel):
++    """The detection that opened an episode, saved once as the episode's evidence."""
++
++    detection_id: str
++    detection_type: str
++    category: DetectionCategory
++    intelligence_level: IntelligenceLevel
++    title: str
++    summary: str
++    signals: dict[str, DetectionSignal] = Field(default_factory=dict)
++    prediction: DetectionPrediction | None = None
++    training_module: DetectionTraining | None = None
++    recommended_actions: list[str] = Field(default_factory=list)
++    generator: str
++
++
++class DetectionResult(ContractModel):
++    session_id: str
++    detection_id: str
++    duplicate: bool
++    outcome: Literal["alert_opened", "alert_escalated", "alert_cleared", "recorded"]
++    ignored_reason: Literal["below_announce_threshold", "already_active", "no_active_episode", "not_higher",
++                            "update_only"] | None = Field(
++        default=None, description="Why a recorded detection changed no alert.")
++    alert_id: str | None = Field(default=None, description="The episode this detection opened, escalated or cleared.")
++    alerts_opened: list[str]
++    alerts_cleared: list[str]
++    announcements_created: list[str]
++    drafts_created: list[str] = Field(default_factory=list)
++    active_alerts: list[Alert]
++    state_version: int
++
++
+ class AlertEvidence(ContractModel):
+     """What the rule saw when the episode opened. Saved once; later readings never change it."""
+ 
+@@ -305,12 +415,22 @@
+     idle_seconds_observed: int | None = Field(default=None, description="observed_at - idle_since (data clock).")
+     machine_category: str | None = None
+     applicability: Literal["all_categories", "category_listed"] = "all_categories"
++    detection: DetectionSnapshot | None = Field(
++        default=None, description="Present for detector alerts: the detection that opened the episode. `readings` "
++                                  "is then the machine state at that moment.")
+ 
+ 
+ class Alert(ContractModel):
+     alert_id: str
+     rule_id: str
+-    alert_type: Literal["seatbelt_unfastened", "prolonged_idle", "idle_unbelted"]
++    alert_type: str = Field(
++        pattern=r"^[a-z][a-z0-9_]{1,63}$",
++        description="Policy rules: seatbelt_unfastened, prolonged_idle or idle_unbelted. Detector alerts: the "
++                    "detection type in lower case, e.g. proximity_danger_zone. Treat unknown values as opaque.")
++    source: Literal["policy_rule", "detector"] = Field(
++        default="policy_rule", description="policy_rule: this backend's safety policy; detector: POST .../detections.")
++    category: DetectionCategory | None = Field(default=None, description="Detector alerts only.")
++    intelligence_level: IntelligenceLevel | None = Field(default=None, description="Detector alerts only.")
+     severity: Literal["warning", "critical"]
+     status: Literal["active", "cleared"]
+     message: str
+diff -ruN a/langgraph-agent/cocoon_agent/contract/spec.py b/langgraph-agent/cocoon_agent/contract/spec.py
+--- a/langgraph-agent/cocoon_agent/contract/spec.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/contract/spec.py	2026-09-24 11:22:30
+@@ -145,6 +145,12 @@
+                                                       "observation accepted/duplicate/ignored/rejected outcomes.",
+                            "schema": "TelemetryRequestTarget"},
+                           {"stage": "I05A", "change": "v2 result", "schema": "TelemetryIngestResult"})),
++    Route("post", "/v1/sessions/{session_id}/detections", "implemented", "D1", ("simulator",),
++          "Post one lifecycle step (open/escalated/update/resolved) of an alert episode found by the trusted "
++          "external detector on simulated telemetry. open/escalated open an episode and announce it (critical safety "
++          "also gets an automatic draft), resolved clears it, update and info are recorded only",
++          idempotency="(session_id, detection_id); same payload → duplicate:true, different payload → 409. One "
++                      "active episode per episode_key. Needs a prior telemetry sample (422 machine_state_unavailable)"),
+     Route("get", "/v1/sessions/{session_id}/events", "implemented", "v1", ("voice_service", "operator"),
+           "Poll retained announcements after a cursor",
+           target_changes=({"stage": "I08A/I11", "change": "Announcements gain schema_version, speakable, "
+diff -ruN a/langgraph-agent/cocoon_agent/graph/builder.py b/langgraph-agent/cocoon_agent/graph/builder.py
+--- a/langgraph-agent/cocoon_agent/graph/builder.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/graph/builder.py	2026-09-24 11:21:39
+@@ -288,7 +288,9 @@
+         if len(candidates) > 1:
+             names = {"seatbelt_unfastened": "the seatbelt warning", "prolonged_idle": "the idling warning",
+                      "idle_unbelted": "the idling warning"}
+-            options = list(dict.fromkeys(names[x[0].alert_type] for x in candidates))
++            # detector alerts have open-ended types: name them by their message
++            options = list(dict.fromkeys(names.get(x[0].alert_type, f"the {x[0].message[:1].lower()}{x[0].message[1:]}"
++                                                   " warning") for x in candidates))
+             action = s.ClarificationAction(type="clarification_needed", for_action="explain_alert",
+                                            reason="several_candidates", options=options)
+             return {"actions": [action.model_dump(mode="json")]}
+diff -ruN a/langgraph-agent/cocoon_agent/migrations.py b/langgraph-agent/cocoon_agent/migrations.py
+--- a/langgraph-agent/cocoon_agent/migrations.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/migrations.py	2026-09-24 11:20:41
+@@ -408,6 +408,27 @@
+ )
+ 
+ 
++DETECTOR_ALERTS: tuple[str, ...] = (
++    # Detections from a trusted external detector (POST .../detections), idempotent per session like telemetry.
++    """CREATE TABLE detections (
++    session_id TEXT NOT NULL REFERENCES sessions(session_id),
++    detection_id TEXT NOT NULL,
++    request_hash TEXT NOT NULL,
++    episode_key TEXT NOT NULL,
++    status TEXT NOT NULL,
++    observed_at TEXT NOT NULL,
++    request_json TEXT NOT NULL,
++    result_json TEXT NOT NULL,
++    received_at TEXT NOT NULL,
++    PRIMARY KEY (session_id, detection_id)
++)""",
++    # Where an episode came from. Existing rows are policy-rule episodes, so NULL reads as policy_rule.
++    "ALTER TABLE alerts ADD COLUMN source TEXT",
++    "ALTER TABLE alerts ADD COLUMN category TEXT",
++    "ALTER TABLE alerts ADD COLUMN intelligence_level TEXT",
++)
++
++
+ @dataclass(frozen=True)
+ class Migration:
+     version: int
+@@ -423,6 +444,7 @@
+     Migration(5, "structured_incidents", STRUCTURED_INCIDENTS),
+     Migration(6, "machine_episodes", MACHINE_EPISODES),
+     Migration(7, "operator_context", OPERATOR_CONTEXT),
++    Migration(8, "detector_alerts", DETECTOR_ALERTS),
+ )
+ 
+ 
+diff -ruN a/langgraph-agent/cocoon_agent/rules.py b/langgraph-agent/cocoon_agent/rules.py
+--- a/langgraph-agent/cocoon_agent/rules.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/rules.py	2026-09-24 11:21:39
+@@ -80,8 +80,9 @@
+ 
+ 
+ def seatbelt_condition(readings: TelemetryReadings, *, requires_engine_on: bool) -> bool:
+-    """True while the (prototype) seatbelt condition holds for this sample."""
+-    if readings.seatbelt_fastened:
++    """True while the (prototype) seatbelt condition holds for this sample. An empty seat (`seat_occupied` false) is
++    not an unbelted operator; an unknown seat state (omitted) keeps the pre-seat behaviour."""
++    if readings.seatbelt_fastened or readings.seat_occupied is False:
+         return False
+     return readings.engine_on or not requires_engine_on
+ 
+@@ -104,5 +105,5 @@
+         return None
+     held = idle and idle_seconds >= (rule.idle_threshold_seconds or 0)
+     if rule.family == "idle_unbelted":
+-        return held and not readings.seatbelt_fastened
++        return held and not readings.seatbelt_fastened and readings.seat_occupied is not False
+     return held
+diff -ruN a/langgraph-agent/cocoon_agent/service.py b/langgraph-agent/cocoon_agent/service.py
+--- a/langgraph-agent/cocoon_agent/service.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/service.py	2026-09-24 11:21:24
+@@ -448,6 +448,31 @@
+                          outcome["alerts_opened"], outcome["alerts_cleared"], outcome["drafts_created"])
+             return self._telemetry_result(session_id, outcome, duplicate=False)
+ 
++    async def submit_detection(self, session_id: str, req: s.DetectionRequest) -> s.DetectionResult:
++        """An alert found by the trusted external detector. Shares the telemetry lock, so a detection is applied after
++        any sample posted before it and its evidence holds the machine state of that moment."""
++        session = self.require_session(session_id)
++        digest = payload_hash(req.model_dump(mode="json", exclude={"detection_id"}))
++        async with self._telemetry_locks[session_id]:
++            prior = self.store.get_detection(session_id, req.detection_id)
++            if prior is not None:
++                if prior[0] != digest:
++                    raise ApiError(409, "idempotency_conflict", "detection_id was already used with a different payload")
++                return self._detection_result(session_id, prior[1], duplicate=True)
++            machine = self.catalog.machines.get(session.machine_id) if self.catalog is not None else None
++            outcome = self.store.apply_detection(session, req, digest, machine.category if machine else None,
++                                                 timedelta(seconds=self.settings.announcement_ttl_seconds))
++            if outcome is None:
++                raise ApiError(422, "machine_state_unavailable",
++                               "post at least one telemetry sample for this session before a detection")
++            if outcome["alerts_opened"] or outcome["alerts_cleared"]:
++                log.info("detector alert session=%s type=%s status=%s opened=%s cleared=%s", session_id,
++                         req.detection_type, req.status, outcome["alerts_opened"], outcome["alerts_cleared"])
++            return self._detection_result(session_id, outcome, duplicate=False)
++
++    def _detection_result(self, session_id: str, outcome: dict[str, Any], duplicate: bool) -> s.DetectionResult:
++        return s.DetectionResult(**outcome, duplicate=duplicate, active_alerts=self.store.active_alerts(session_id))
++
+     def _telemetry_result(self, session_id: str, outcome: dict[str, Any], duplicate: bool) -> s.TelemetryResult:
+         outcome = {k: v for k, v in outcome.items() if k in s.TelemetryResult.model_fields}  # pre-B3 saved results
+         return s.TelemetryResult(**outcome, duplicate=duplicate, active_alerts=self.store.active_alerts(session_id))
+diff -ruN a/langgraph-agent/cocoon_agent/store.py b/langgraph-agent/cocoon_agent/store.py
+--- a/langgraph-agent/cocoon_agent/store.py	2026-09-24 04:54:52
++++ b/langgraph-agent/cocoon_agent/store.py	2026-09-24 11:33:50
+@@ -955,7 +955,116 @@
+             )
+             return result
+ 
++    # ------------------------------------------------------------------ detections (external detector)
++
++    def get_detection(self, session_id: str, detection_id: str) -> tuple[str, dict[str, Any]] | None:
++        row = self._one("SELECT request_hash, result_json FROM detections WHERE session_id = ? AND detection_id = ?",
++                        (session_id, detection_id))
++        return (row["request_hash"], json.loads(row["result_json"])) if row else None
++
++    def apply_detection(self, session: s.Session, req: s.DetectionRequest, request_hash: str,
++                        machine_category: str | None, announcement_ttl: timedelta) -> dict[str, Any] | None:
++        """Apply one detection lifecycle step in ONE short transaction: open, escalate or clear the episode keyed by
++        `episode_key`, with its announcement and (for critical safety) its automatic draft. The episode's evidence is
++        the detection that opened it plus the machine state at that moment, saved once. Returns None when the session
++        has no machine state yet (the evidence would have no readings)."""
++        now = utcnow()
++        sid = session.session_id
++        rule_id = f"detector:{req.episode_key}"
++        opened: list[str] = []
++        cleared: list[str] = []
++        announced: list[str] = []
++        drafts: list[str] = []
++        outcome, ignored, alert_id = "recorded", None, None
++        with self._tx() as c:
++            state = c.execute("SELECT readings_json FROM machine_state WHERE session_id = ?", (sid,)).fetchone()
++            if state is None:
++                return None
++            active = c.execute("SELECT * FROM alerts WHERE session_id = ? AND rule_id = ? AND status = 'active'",
++                               (sid, rule_id)).fetchone()
++            rank = {"info": 0, "warning": 1, "critical": 2}
++            if req.status in ("open", "escalated"):
++                if req.severity == "info":
++                    ignored = "below_announce_threshold"
++                elif active is not None and (req.status == "open" or rank[req.severity] <= rank[active["severity"]]):
++                    ignored, alert_id = ("already_active" if req.status == "open" else "not_higher"), active["alert_id"]
++                else:
++                    if active is not None:  # escalation = the lower-severity episode ends, a critical one starts
++                        c.execute("UPDATE alerts SET status = 'cleared', cleared_at = ?, cleared_by_event_id = ?"
++                                  " WHERE alert_id = ?", (iso(req.observed_at), req.detection_id, active["alert_id"]))
++                        cleared.append(active["alert_id"])
++                    alert_id = self._open_detector_alert(c, session, req, rule_id, state["readings_json"],
++                                                         machine_category)
++                    opened.append(alert_id)
++                    if req.category == "safety" and req.severity == "critical":
++                        draft_id = Store.insert_auto_draft(
++                            c, session, alert_id,
++                            f"{req.title}: {req.summary} (automatic draft from a simulated detection)"[:1000],
++                            "high", req.observed_at)
++                        c.execute("UPDATE alerts SET draft_incident_id = ? WHERE alert_id = ?", (draft_id, alert_id))
++                        drafts.append(draft_id)
++                    announced.append(self._announce(c, sid, alert_id, "alert_started",
++                                                    "critical" if req.severity == "critical" else "high",
++                                                    _detection_speech(req), now, announcement_ttl))
++                    outcome = "alert_escalated" if active is not None else "alert_opened"
++                    if req.one_shot:  # announced and explainable, never left active
++                        c.execute("UPDATE alerts SET status = 'cleared', cleared_at = ?, cleared_by_event_id = ?"
++                                  " WHERE alert_id = ?", (iso(req.observed_at), req.detection_id, alert_id))
++                        cleared.append(alert_id)
++            elif req.status == "resolved":
++                if active is None:
++                    ignored = "no_active_episode"
++                else:
++                    alert_id = active["alert_id"]
++                    c.execute("UPDATE alerts SET status = 'cleared', cleared_at = ?, cleared_by_event_id = ?"
++                              " WHERE alert_id = ?", (iso(req.observed_at), req.detection_id, alert_id))
++                    cleared.append(alert_id)
++                    if req.category == "safety" and active["announced"]:
++                        announced.append(self._announce(c, sid, alert_id, "alert_cleared", "low",
++                                                        f"Cleared: {active['message']}.", now, announcement_ttl))
++                    outcome = "alert_cleared"
++            else:
++                ignored, alert_id = "update_only", active["alert_id"] if active is not None else None
++            if opened or cleared:
++                c.execute("UPDATE sessions SET state_version = state_version + 1 WHERE session_id = ?", (sid,))
++            version = c.execute("SELECT state_version FROM sessions WHERE session_id = ?", (sid,)).fetchone()[0]
++            result = {"session_id": sid, "detection_id": req.detection_id, "outcome": outcome,
++                      "ignored_reason": ignored, "alert_id": alert_id, "alerts_opened": opened,
++                      "alerts_cleared": cleared, "announcements_created": announced, "drafts_created": drafts,
++                      "state_version": version}
++            c.execute(
++                "INSERT INTO detections(session_id, detection_id, request_hash, episode_key, status, observed_at,"
++                " request_json, result_json, received_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
++                (sid, req.detection_id, request_hash, req.episode_key, req.status, iso(req.observed_at),
++                 req.model_dump_json(), json.dumps(result), iso(now)))
++            return result
++
+     @staticmethod
++    def _open_detector_alert(c: sqlite3.Connection, session: s.Session, req: s.DetectionRequest, rule_id: str,
++                             readings_json: str, machine_category: str | None) -> str:
++        alert_id = "ALR-" + uuid.uuid4().hex[:12]
++        snapshot = s.DetectionSnapshot(
++            detection_id=req.detection_id, detection_type=req.detection_type, category=req.category,
++            intelligence_level=req.intelligence_level, title=req.title, summary=req.summary,
++            signals=req.evidence, prediction=req.prediction, training_module=req.training_module,
++            recommended_actions=req.recommended_actions, generator=req.provenance.generator)
++        evidence = s.AlertEvidence(event_id=req.detection_id, observed_at=req.observed_at,
++                                   readings=s.TelemetryReadings.model_validate_json(readings_json),
++                                   machine_category=machine_category, detection=snapshot)
++        action = "; ".join(a.rstrip(".") for a in req.recommended_actions[:2])
++        c.execute(
++            "INSERT INTO alerts(alert_id, session_id, rule_id, alert_type, severity, status, message, explanation,"
++            " trigger_readings_json, opened_by_event_id, started_at, policy_version, source_status, reason,"
++            " recommended_action, evidence_json, correlated_alert_id, announced, source, category, intelligence_level)"
++            " VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, 'demo_assumption', ?, ?, ?, NULL, 1, 'detector', ?, ?)",
++            (alert_id, session.session_id, rule_id, req.detection_type.lower(), req.severity, req.title,
++             _detection_explanation(req), readings_json, req.detection_id, iso(req.observed_at),
++             req.provenance.generator, req.title, f"{action}." if action else None, evidence.model_dump_json(),
++             req.category, req.intelligence_level),
++        )
++        return alert_id
++
++    @staticmethod
+     def _announce(c: sqlite3.Connection, session_id: str, alert_id: str, kind: str, priority: str, speech: str,
+                   now: datetime, ttl: timedelta) -> str:
+         seq = c.execute("SELECT COALESCE(MAX(sequence), 0) + 1 FROM announcements WHERE session_id = ?",
+@@ -1145,6 +1254,28 @@
+     return s.Lesson(**{k: r[k] for k in r.keys() if k in s.Lesson.model_fields})
+ 
+ 
++_LEVEL_PHRASE = {
++    "L1_threshold": "a fixed limit was crossed",
++    "L2_trend": "a reading is trending towards its limit",
++    "L3_ml_pattern": "the machine-health model saw readings that do not match normal operation",
++    "L4_predictive": "the plan and forecasts point to a problem ahead",
++    "L5_contextual": "a check that takes the current situation into account fired",
++}
++
++
++def _detection_explanation(req: s.DetectionRequest) -> str:
++    """Starts lower case: the composer prefixes "I warned you because"."""
++    return (f"{_LEVEL_PHRASE[req.intelligence_level]}: {req.summary.rstrip('.')}. This is a simulated detection, "
++            "not a reading from a real machine.")
++
++
++def _detection_speech(req: s.DetectionRequest) -> str:
++    if req.speech:
++        return req.speech
++    first = f" {req.recommended_actions[0].rstrip('.')}." if req.recommended_actions else ""
++    return f"{req.title.rstrip('.')}.{first}"
++
++
+ def _alert(r: sqlite3.Row) -> s.Alert:
+     keys = r.keys()
+     extra = {}
+@@ -1154,6 +1285,9 @@
+                      draft_incident_id=r["draft_incident_id"], announced=bool(r["announced"]),
+                      training_assignment_id=r["training_assignment_id"] if "training_assignment_id" in keys else None,
+                      evidence=s.AlertEvidence.model_validate_json(r["evidence_json"]) if r["evidence_json"] else None)
++    if "source" in keys:  # v8: detector episodes; NULL = a policy-rule episode from before v8
++        extra.update(source=r["source"] or "policy_rule", category=r["category"],
++                     intelligence_level=r["intelligence_level"])
+     return s.Alert(
+         alert_id=r["alert_id"], rule_id=r["rule_id"], alert_type=r["alert_type"], severity=r["severity"],
+         status=r["status"], message=r["message"], explanation=r["explanation"], simulated=True,
+diff -ruN a/langgraph-agent/docs/HANDOFF.md b/langgraph-agent/docs/HANDOFF.md
+--- a/langgraph-agent/docs/HANDOFF.md	2026-09-24 04:54:52
++++ b/langgraph-agent/docs/HANDOFF.md	2026-09-24 11:34:34
+@@ -2,6 +2,61 @@
+ 
+ Newest increment first. Each entry separates what was observed from what is still unverified.
+ 
++## D1: detections from the simulator's detection layer, and `seat_occupied`
++
++- **Recorded:** 2026-09-24. Prepared by the data/simulation stream (Prithvi) as a proposal for the backend owner. It was built on a local copy of this service (the `cater` repository, `cocoon/`), not on the `backend` branch. No commit was made.
++- **Why:** the simulator's detection layer (rules + ML on simulated telemetry) raises about 40 kinds of alerts: proximity, stability, power line, ML machine health, fuel shortfall, weather, fatigue and more. Before D1, only the three policy rules could reach the operator.
++
++### What changed
++
++- **`POST /v1/sessions/{session_id}/detections`** (trusted service only; operator and supervisor tokens get 403):
++  - Each detection is one lifecycle step of an episode, keyed by `episode_key` (`rule_id = detector:<key>`).
++  - `open` announces the episode: `high` for warning, `critical` for critical.
++  - `escalated` to a higher severity ends the episode silently and opens and announces a critical one.
++  - `resolved` clears it, with a `Cleared: …` announcement for safety episodes.
++  - `update` and `info` are recorded only.
++  - `one_shot` notices are announced and closed at once.
++  - A critical safety detection gets an automatic draft.
++  - The episode evidence is saved once: the detection plus the machine state of that moment. "Why?" reads it.
++  - Idempotent on `(session_id, detection_id)`; a different payload is 409.
++  - Shares the telemetry lock. The session needs a telemetry sample first, otherwise 422 `machine_state_unavailable`.
++- **Optional `seat_occupied` reading.** `false` means an empty seat: the seatbelt and idle-unbelted rules do not apply, but prolonged idle still does. Omitted means unknown, and behaviour is unchanged.
++- **"Why?" clarification fix.** It named candidates through a fixed dict, which would raise KeyError for detector alert types. It now falls back to the alert message.
++- **Schema v8** (`detector_alerts`), `docs/MIGRATIONS.md`.
++- **Additive response fields:**
++  - `Alert.source`, `Alert.category`, `Alert.intelligence_level`
++  - `AlertEvidence.detection`
++  - `alert_type` widened from three values to an open lower-snake string, which clients must treat as opaque
++  - new error code `machine_state_unavailable`
++
++### Contracts
++
++- `contracts/openapi.yaml` and `contracts/proposed/` were regenerated with the two export scripts.
++- The route is registered in `contract/spec.py` as implemented, stage D1, caller `simulator`.
++- `API_CONTRACT.md` covers it in the endpoint table, actor access, the telemetry `seat_occupied` rule, a Detections (D1) section and the capability table.
++- New examples `detection.request.json` / `detection.response.json` came from a real run and are registered in `tests/test_contract.py`.
++
++### Checks run and observed results (macOS, Python 3.11, mock mode)
++
++- `python -m pytest -q` in `langgraph-agent/`: **320 passed**. That is 311 before the change plus 7 new tests in `tests/test_detections.py` and 2 new example checks. `tests/test_migrations.py` gained the three new alert columns in `ADDED_COLUMNS`.
++- `python scripts/export_openapi.py --check` and `python scripts/export_proposed_contract.py --check`: both up to date.
++- `livekit-voice`: `pytest tests/test_contract.py` gives 9 passed against the regenerated spec.
++  - The full voice suite gives 136 passed, 17 skipped, 1 failed: `test_config.py::test_remote_brain_is_future_only`.
++  - That test fails identically on the unmodified copy, so it is not caused by D1.
++- **Real HTTP, end to end:** backend in mock mode, the simulator and `scripts/cocoon_bridge.py` from `cater`.
++  - The whole demo day was bridged with no rejected or stale requests: 42 announcements and 6 automatic drafts.
++  - Critical priority was used for proximity, stability, power line and lightning.
++  - The seatbelt warning at 06:40 came from the policy rule.
++  - At lunch, `seat_occupied: false` gave "machine left running unattended" and no false seatbelt warning.
++  - Stepping through the day alert by alert, "Why?" answered each alert directly from its saved evidence.
++
++### Remaining risks and next steps
++
++- **Not verified with the voice worker or on a phone:** announcements were read through `GET .../events`, not spoken.
++- **Clarification wording:** with several alerts announced since the last turn, "Why?" asks which one the operator means. The clarification wording lists alert messages, which can be long.
++- **Detector alerts carry no lesson assignment.** The simulator's training modules (TM-01…TM-11) are not the backend lesson catalogue; they are kept in the evidence.
++- **Needs the backend owner's review and agreement** before it is merged: a shared-contract change.
++
+ ## B4: explanations, idle reasons, shift briefing, training link and the HTTP demo
+ 
+ - **Schema v7:** `idle_reasons`, `shift_briefings`, lesson `version`/`content_text`/`content_status`,
+diff -ruN a/langgraph-agent/docs/MIGRATIONS.md b/langgraph-agent/docs/MIGRATIONS.md
+--- a/langgraph-agent/docs/MIGRATIONS.md	2026-09-24 04:54:52
++++ b/langgraph-agent/docs/MIGRATIONS.md	2026-09-24 11:34:34
+@@ -11,6 +11,7 @@
+ | 1 | `baseline_v1` | The v1 tables exactly as the pre-I02a code created them: sessions, turns, tasks, lessons, incidents, training_assignments, alerts (+ `one_active_episode_per_rule`), telemetry_events, announcements, deliveries. |
+ | 2 | `catalog_bound_sessions` | Adds `catalog_versions`, `catalog_version_machines` and `catalog_version_operators`: append-only snapshots, and triggers refuse UPDATE/DELETE. Adds nullable session columns `dataset_manifest_sha256`, `site_id`, `shift_id` and `context_source`, plus `binding_status` and `context_status` (NOT NULL, default `legacy_unverified`). Adds the `sessions_association_immutable` trigger: after creation, only `state_version` and `last_observed_at` can change. |
+ | 3 | `actor_tokens` | Adds `principals` (operator or supervisor; an operator principal is bound to one catalog operator and the catalog snapshot it was verified against; immutable) and `actor_tokens` (SHA-256 digest only, never the token; scopes, issue/expiry times; only `revoked_at`/`revoke_reason` can change, once; no deletes). Existing rows are untouched. |
++| 8 | `detector_alerts` | Adds `detections` (one row per `(session_id, detection_id)`: request hash, episode key, status, observation time, request and saved result) and nullable alert columns `source`, `category` and `intelligence_level`. Existing alerts keep NULL there, which reads as `source: policy_rule`. |
+ 
+ All changes are additive (`CREATE TABLE`, `ALTER TABLE ... ADD COLUMN`, `CREATE TRIGGER`). No table is rebuilt, and no row, ID, index, constraint or reference is rewritten.
+ 
+diff -ruN a/langgraph-agent/tests/test_contract.py b/langgraph-agent/tests/test_contract.py
+--- a/langgraph-agent/tests/test_contract.py	2026-09-24 04:54:52
++++ b/langgraph-agent/tests/test_contract.py	2026-09-24 11:24:13
+@@ -24,6 +24,8 @@
+     "state.response.json": s.SessionState,
+     "telemetry.request.json": s.TelemetryRequest,
+     "telemetry.response.json": s.TelemetryResult,
++    "detection.request.json": s.DetectionRequest,
++    "detection.response.json": s.DetectionResult,
+     "events.response.json": s.EventsPage,
+     "delivery.request.json": s.DeliveryReport,
+     "delivery.response.json": s.DeliveryRecord,
+diff -ruN a/langgraph-agent/tests/test_detections.py b/langgraph-agent/tests/test_detections.py
+--- a/langgraph-agent/tests/test_detections.py	1970-01-01 05:30:00
++++ b/langgraph-agent/tests/test_detections.py	2026-09-24 11:33:50
+@@ -0,0 +1,158 @@
++"""D1: detections from the trusted external detector, and the optional seat_occupied reading."""
++
++from __future__ import annotations
++
++from fastapi.testclient import TestClient
++
++from cocoon_agent.api.app import create_app
++
++from .conftest import AUTH, make_settings, new_session, turn
++from .test_auth import bearer, issue
++
++T0 = "2026-09-24T02:00:00Z"
++
++
++def sample(c: TestClient, sid: str, event_id: str, at: str, **readings) -> dict:
++    body = {"event_id": event_id, "observed_at": at, "simulated": True,
++            "readings": {"engine_on": True, "seatbelt_fastened": True, "idle_seconds": 0,
++                         "operating_state": "working", "speed_kph": 0.0, **readings}}
++    r = c.post(f"/v1/sessions/{sid}/telemetry", headers=AUTH, json=body)
++    assert r.status_code == 200, r.text
++    return r.json()
++
++
++def detection(detection_id: str, status: str = "open", severity: str = "critical", *,
++              key: str = "EXC_DEMO_001:PROXIMITY:W02", dtype: str = "PROXIMITY_DANGER_ZONE",
++              category: str = "safety", at: str = "2026-09-24T02:00:30Z", **extra) -> dict:
++    return {
++        "detection_id": detection_id, "observed_at": at, "simulated": True, "episode_key": key, "status": status,
++        "detection_type": dtype, "category": category, "intelligence_level": "L5_contextual", "severity": severity,
++        "title": "Person inside the danger zone",
++        "summary": "Surveyor Chris D. (W02) is 3.2 m from EXC_DEMO_001 while it is swinging; danger radius 7.5 m.",
++        "recommended_actions": ["Stop all motion now", "Confirm the person is clear before resuming"],
++        "evidence": {"distance_m": {"value": 3.2, "unit": "m", "threshold": 7.5}, "worker_role": {"value": "Surveyor"}},
++        "training_module": {"module_id": "TM-08", "title": "Swing radius and ground crew awareness"},
++        "provenance": {"generator": "cater.detect.v1", "source_event_id": "EVT-000041"},
++        **extra,
++    }
++
++
++def post(c: TestClient, sid: str, body: dict, expect: int = 200) -> dict:
++    r = c.post(f"/v1/sessions/{sid}/detections", headers=AUTH, json=body)
++    assert r.status_code == expect, r.text
++    return r.json()
++
++
++def test_open_announces_once_drafts_critical_safety_and_resolve_clears(client):
++    sid = new_session(client)
++    sample(client, sid, "s1", T0)
++    first = post(client, sid, detection("d1"))
++    assert first["outcome"] == "alert_opened" and len(first["alerts_opened"]) == 1
++    assert len(first["drafts_created"]) == 1 and len(first["announcements_created"]) == 1
++    alert = first["active_alerts"][0]
++    assert alert["source"] == "detector" and alert["alert_type"] == "proximity_danger_zone"
++    assert alert["severity"] == "critical" and alert["category"] == "safety"
++    assert alert["intelligence_level"] == "L5_contextual" and alert["source_status"] == "demo_assumption"
++    assert alert["evidence"]["detection"]["signals"]["distance_m"]["threshold"] == 7.5
++    assert alert["evidence"]["readings"]["operating_state"] == "working"  # machine state at that moment
++    assert "simulated detection" in alert["explanation"]
++
++    # a retry is a duplicate; the same key opened again does not announce twice
++    assert post(client, sid, detection("d1"))["duplicate"] is True
++    again = post(client, sid, detection("d2"))
++    assert again["outcome"] == "recorded" and again["ignored_reason"] == "already_active"
++    assert again["announcements_created"] == []
++
++    page = client.get(f"/v1/sessions/{sid}/events?after=0", headers=AUTH).json()["events"]
++    assert [(e["type"], e["priority"]) for e in page] == [("alert_started", "critical")]
++    assert page[0]["speech"] == "Person inside the danger zone. Stop all motion now."
++
++    done = post(client, sid, detection("d3", "resolved", "info"))
++    assert done["outcome"] == "alert_cleared" and done["active_alerts"] == []
++    page = client.get(f"/v1/sessions/{sid}/events?after=1", headers=AUTH).json()["events"]
++    assert [(e["type"], e["speech"]) for e in page] == [("alert_cleared", "Cleared: Person inside the danger zone.")]
++    assert post(client, sid, detection("d4", "resolved", "info"))["ignored_reason"] == "no_active_episode"
++
++
++def test_escalation_opens_a_new_critical_episode_and_info_update_never_speak(client):
++    sid = new_session(client)
++    sample(client, sid, "s1", T0)
++    key, dtype = "EXC_DEMO_001:COOLANT_TEMP_HIGH", "COOLANT_TEMP_HIGH"
++    common = dict(key=key, dtype=dtype, category="machine_health")
++    warn = post(client, sid, detection("c1", "open", "warning", **common))
++    assert warn["outcome"] == "alert_opened" and warn["drafts_created"] == []  # not safety: no draft
++    assert post(client, sid, detection("c2", "update", "warning", **common))["ignored_reason"] == "update_only"
++    crit = post(client, sid, detection("c3", "escalated", "critical", **common))
++    assert crit["outcome"] == "alert_escalated"
++    assert crit["alerts_cleared"] == warn["alerts_opened"] and crit["alerts_opened"] != warn["alerts_opened"]
++    assert [a["severity"] for a in crit["active_alerts"]] == ["critical"]
++    assert post(client, sid, detection("c4", "escalated", "warning", **common))["ignored_reason"] == "not_higher"
++    info = post(client, sid, detection("i1", "open", "info", key="EXC_DEMO_001:SHIFT_BRIEFING",
++                                       dtype="SHIFT_BRIEFING", category="planning"))
++    assert info["ignored_reason"] == "below_announce_threshold" and info["alert_id"] is None
++    kinds = [(e["type"], e["priority"]) for e in
++             client.get(f"/v1/sessions/{sid}/events?after=0", headers=AUTH).json()["events"]]
++    assert kinds == [("alert_started", "high"), ("alert_started", "critical")]  # clears of non-safety are silent
++
++
++def test_conflict_missing_machine_state_and_operator_token_are_refused(client_factory, data_dir, tmp_path):
++    with client_factory() as c:
++        sid = new_session(c)
++        err = post(c, sid, detection("d1"), expect=422)["error"]
++        assert err["code"] == "machine_state_unavailable"
++        sample(c, sid, "s1", T0)
++        post(c, sid, detection("d1"))
++        assert post(c, sid, detection("d1", severity="warning"), expect=409)["error"]["code"] == "idempotency_conflict"
++        token, _ = issue(make_settings(data_dir), tmp_path, "operator", "--operator-id", "OP_TEST_1")
++        r = c.post(f"/v1/sessions/{sid}/detections", headers=bearer(token), json=detection("d9"))
++        assert r.status_code == 403 and r.json()["error"]["code"] == "forbidden"
++
++
++def test_why_explains_the_detector_alert_from_its_saved_evidence(client):
++    sid = new_session(client)
++    sample(client, sid, "s1", T0)
++    post(client, sid, detection("m1", "open", "warning", key="EXC_DEMO_001:COOLING_DEGRADATION_DETECTED",
++                                dtype="COOLING_DEGRADATION_DETECTED", category="machine_health",
++                                intelligence_level="L3_ml_pattern", title="Cooling system losing capacity",
++                                summary="Coolant 94.1 °C is 2.3 °C above the 91.8 °C the model expects for this load.",
++                                recommended_actions=["Ease off heavy digging", "Blow out the radiator at the break"]))
++    r = turn(client, sid, "why-1", "Why did you warn me?")
++    assert r.status_code == 200, r.text
++    speech = r.json()["speech"]
++    assert "machine-health model" in speech and "2.3 °C above" in speech and "Ease off heavy digging" in speech
++
++
++def test_empty_seat_is_not_an_unbelted_operator_but_still_idles(client):
++    sid = new_session(client)
++    res = sample(client, sid, "u1", T0, seatbelt_fastened=False, seat_occupied=False, operating_state="idle")
++    assert res["alerts_opened"] == []  # nobody in the seat: no seatbelt warning
++    res = sample(client, sid, "u2", "2026-09-24T02:06:00Z", seatbelt_fastened=False, seat_occupied=False,
++                 operating_state="idle")
++    assert [a["alert_type"] for a in res["active_alerts"]] == ["prolonged_idle"]  # idling unattended still counts
++    res = sample(client, sid, "u3", "2026-09-24T02:07:00Z", seatbelt_fastened=False, seat_occupied=True,
++                 operating_state="idle")
++    assert "seatbelt_unfastened" in {a["alert_type"] for a in res["active_alerts"]}  # someone sat down unbelted
++
++
++def test_policy_alerts_keep_their_shape_after_v8(client_factory, data_dir):
++    with client_factory() as c:
++        sid = new_session(c)
++        res = sample(c, sid, "b1", T0, seatbelt_fastened=False)  # seat_occupied omitted: behaviour as before
++        alert = res["active_alerts"][0]
++        assert alert["alert_type"] == "seatbelt_unfastened" and alert["source"] == "policy_rule"
++        assert alert["category"] is None and alert["evidence"]["detection"] is None
++    with TestClient(create_app(make_settings(data_dir))) as c:  # restart reads the same episode
++        assert c.get(f"/v1/sessions/{sid}/state", headers=AUTH).json()["active_alerts"][0]["source"] == "policy_rule"
++
++
++def test_one_shot_notice_is_announced_and_explainable_but_never_active(client):
++    sid = new_session(client)
++    sample(client, sid, "s1", T0)
++    res = post(client, sid, detection("h1", "open", "warning", key="EXC_DEMO_001:HOT_SHUTDOWN", dtype="HOT_SHUTDOWN",
++                                      category="operator_behavior", title="Engine shut down hot (no cool-down)",
++                                      summary="Engine switched off 40 s after heavy digging; coolant 97 °C.",
++                                      recommended_actions=["Idle 3-5 min before shutting down"], one_shot=True))
++    assert res["outcome"] == "alert_opened" and res["alerts_cleared"] == res["alerts_opened"]
++    assert res["active_alerts"] == [] and len(res["announcements_created"]) == 1
++    speech = turn(client, sid, "why-h", "Why did you warn me?").json()["speech"]
++    assert "coolant 97 °C" in speech
+diff -ruN a/langgraph-agent/tests/test_migrations.py b/langgraph-agent/tests/test_migrations.py
+--- a/langgraph-agent/tests/test_migrations.py	2026-09-24 04:54:52
++++ b/langgraph-agent/tests/test_migrations.py	2026-09-24 11:22:30
+@@ -73,7 +73,8 @@
+                   "occurred_at", "occurred_basis", "episode_id", "draft_id", "confirmed_at"),
+     "turns": ("route_json",),
+     "alerts": ("policy_version", "source_status", "reason", "recommended_action", "evidence_json",
+-               "correlated_alert_id", "draft_incident_id", "announced", "training_assignment_id"),
++               "correlated_alert_id", "draft_incident_id", "announced", "training_assignment_id", "source", "category",
++               "intelligence_level"),
+     "telemetry_events": ("provenance_json",),
+     "lessons": ("version", "content_text", "content_status"),
+     "training_assignments": ("source_episode_id",),

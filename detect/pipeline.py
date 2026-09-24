@@ -99,7 +99,7 @@ class DetectionPipeline:
             prediction=Prediction(**f.prediction) if f.prediction else None,
             context=self.build_context(v, now),
             recommended_actions=actions_for(f.type), training_module=training_for(f.type),
-            dtc=f.dtc if (f.dtc and f.dtc.get("spn")) else None, related_incident_keys=f.related,
+            dtc=f.dtc if (f.dtc and f.dtc.get("spn")) else None, related_incident_keys=f.related, one_shot=f.one_shot,
         )
         d = ev.model_dump()
         if f.capture_incident and status in ("open", "escalated") and v is not None:

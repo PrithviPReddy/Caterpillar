@@ -1,0 +1,35 @@
+{
+  "detection_id": "cater-20260924T0200-EVT-000041",
+  "observed_at": "2026-09-24T02:00:30Z",
+  "simulated": true,
+  "episode_key": "EXC_DEMO_001:PROXIMITY:W02",
+  "status": "open",
+  "detection_type": "PROXIMITY_DANGER_ZONE",
+  "category": "safety",
+  "intelligence_level": "L5_contextual",
+  "severity": "critical",
+  "title": "Person inside the danger zone",
+  "summary": "Surveyor Chris D. (W02) is 3.2 m from EXC_DEMO_001 while it is swinging; danger radius 7.5 m.",
+  "recommended_actions": [
+    "Stop all motion now",
+    "Confirm the person is clear before resuming"
+  ],
+  "evidence": {
+    "distance_m": {
+      "value": 3.2,
+      "unit": "m",
+      "threshold": 7.5
+    },
+    "worker_role": {
+      "value": "Surveyor"
+    }
+  },
+  "training_module": {
+    "module_id": "TM-08",
+    "title": "Swing radius and ground crew awareness"
+  },
+  "provenance": {
+    "generator": "cater.detect.v1",
+    "source_event_id": "EVT-000041"
+  }
+}

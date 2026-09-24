@@ -6,10 +6,10 @@
     "semantic_hash": "7bcd37075fc368f5c44172601948f970"
   },
   "app/dashboard.py": {
-    "mtime": 1790165544.9981236,
-    "seen": 1790179453.5195851,
-    "ast_hash": "8d7e238d46508a250e3279acb562f995",
-    "semantic_hash": "8d7e238d46508a250e3279acb562f995"
+    "mtime": 1790222520.2920134,
+    "seen": 1790231473.7754261,
+    "ast_hash": "e06f141cf4455f254907690dc17b2ee5",
+    "semantic_hash": "e06f141cf4455f254907690dc17b2ee5"
   },
   "app/ui.py": {
     "mtime": 1790165232.2215168,
@@ -60,10 +60,10 @@
     "semantic_hash": "a449a6352e68180b9988e6968242accc"
   },
   "detect/pipeline.py": {
-    "mtime": 1790165544.997271,
-    "seen": 1790179453.5195892,
-    "ast_hash": "1096b1061da9fa8c9d1d2f1530b3a1d6",
-    "semantic_hash": "1096b1061da9fa8c9d1d2f1530b3a1d6"
+    "mtime": 1790229746.302466,
+    "seen": 1790231473.7755232,
+    "ast_hash": "f690c22cdd6a244f47d3072d5d6e1f07",
+    "semantic_hash": "f690c22cdd6a244f47d3072d5d6e1f07"
   },
   "detect/planning.py": {
     "mtime": 1790165544.997209,
@@ -90,10 +90,10 @@
     "semantic_hash": "39b686e191209a0b65bf8349d70e6374"
   },
   "detect/schema.py": {
-    "mtime": 1790161656.7084143,
-    "seen": 1790179453.5195909,
-    "ast_hash": "f6f39c021758d4e248c822471c92a233",
-    "semantic_hash": "f6f39c021758d4e248c822471c92a233"
+    "mtime": 1790229746.3020554,
+    "seen": 1790231473.775525,
+    "ast_hash": "07851bd6e3aa1faeddb77097d1982550",
+    "semantic_hash": "07851bd6e3aa1faeddb77097d1982550"
   },
   "detect/view.py": {
     "mtime": 1790164453.2770276,
@@ -132,16 +132,16 @@
     "semantic_hash": "6c061f9fbe6a126b435ced31cac02a15"
   },
   "run_demo.sh": {
-    "mtime": 1790165092.740555,
-    "seen": 1790179453.519593,
-    "ast_hash": "d3deb809af46fdd165f89a391ef970ec",
-    "semantic_hash": "d3deb809af46fdd165f89a391ef970ec"
+    "mtime": 1790229905.7333148,
+    "seen": 1790231473.775529,
+    "ast_hash": "cab0a08417ccb6800bfcb77849378c49",
+    "semantic_hash": "cab0a08417ccb6800bfcb77849378c49"
   },
   "scripts/mock_agent.py": {
-    "mtime": 1790165160.9570665,
-    "seen": 1790179453.519594,
-    "ast_hash": "941294b53cf608f5ecb24b8a338c5c16",
-    "semantic_hash": "941294b53cf608f5ecb24b8a338c5c16"
+    "mtime": 1790222520.3005748,
+    "seen": 1790231473.77553,
+    "ast_hash": "10b840cc0dddecf89032e98b91cc670b",
+    "semantic_hash": "10b840cc0dddecf89032e98b91cc670b"
   },
   "scripts/run_headless.py": {
     "mtime": 1790162176.9045208,
@@ -168,10 +168,10 @@
     "semantic_hash": "7bcd37075fc368f5c44172601948f970"
   },
   "server/api.py": {
-    "mtime": 1790164371.293796,
-    "seen": 1790179453.519595,
-    "ast_hash": "0a8e6223341b632fb05733f7b193c3e2",
-    "semantic_hash": "0a8e6223341b632fb05733f7b193c3e2"
+    "mtime": 1790222520.2935588,
+    "seen": 1790231473.775532,
+    "ast_hash": "7f101364a48ddc8d245f67164f511278",
+    "semantic_hash": "7f101364a48ddc8d245f67164f511278"
   },
   "server/runner.py": {
     "mtime": 1790164349.9281108,
@@ -234,21 +234,1869 @@
     "semantic_hash": "29c312ad124fa011f69cb0fe90aa50ce"
   },
   "README.md": {
-    "mtime": 1790165360.9083884,
-    "seen": 1790179453.5195992,
-    "ast_hash": "fb60aa0b345f6acebda16164ca1f5f8d",
-    "semantic_hash": "fb60aa0b345f6acebda16164ca1f5f8d"
+    "mtime": 1790224820.9380546,
+    "seen": 1790231473.775537,
+    "ast_hash": "dfa3d2a225efffd641974292110c2e80",
+    "semantic_hash": "dfa3d2a225efffd641974292110c2e80"
   },
   "docs/INTEGRATION.md": {
-    "mtime": 1790165313.4271958,
-    "seen": 1790179453.5195992,
-    "ast_hash": "d2f06d270b33233ac3823a7b0f43cee7",
-    "semantic_hash": "d2f06d270b33233ac3823a7b0f43cee7"
+    "mtime": 1790229949.2618105,
+    "seen": 1790231473.77555,
+    "ast_hash": "a45d0d05ca9edc6d3c5947cc5bec68e7",
+    "semantic_hash": "a45d0d05ca9edc6d3c5947cc5bec68e7"
   },
   "requirements.txt": {
     "mtime": 1790160662.9133153,
     "seen": 1790179453.5195992,
     "ast_hash": "3d99fbc1e4f16b7356891e47b8b6e947",
     "semantic_hash": "3d99fbc1e4f16b7356891e47b8b6e947"
+  },
+  "cocoon/contracts/examples/delivery.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775428,
+    "ast_hash": "4b72361c8c8bbed06c05f11bf4bf5c05",
+    "semantic_hash": "4b72361c8c8bbed06c05f11bf4bf5c05"
+  },
+  "cocoon/contracts/examples/delivery.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775429,
+    "ast_hash": "00a11a160d6696e29614a7c258ad74b9",
+    "semantic_hash": "00a11a160d6696e29614a7c258ad74b9"
+  },
+  "cocoon/contracts/examples/detection.request.json": {
+    "mtime": 1790229253.142665,
+    "seen": 1790231473.775429,
+    "ast_hash": "f37ba2c1b50fb58d8f5919151da3ee40",
+    "semantic_hash": "f37ba2c1b50fb58d8f5919151da3ee40"
+  },
+  "cocoon/contracts/examples/detection.response.json": {
+    "mtime": 1790229253.142825,
+    "seen": 1790231473.77543,
+    "ast_hash": "30d9d40e95500e50b48f2bf8edf41a4a",
+    "semantic_hash": "30d9d40e95500e50b48f2bf8edf41a4a"
+  },
+  "cocoon/contracts/examples/error_idempotency_conflict.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77543,
+    "ast_hash": "b3300990fdeadfb1fcb02776c8bdaa6f",
+    "semantic_hash": "b3300990fdeadfb1fcb02776c8bdaa6f"
+  },
+  "cocoon/contracts/examples/error_unauthorized.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775431,
+    "ast_hash": "4f03f597fe38435800d372f373739150",
+    "semantic_hash": "4f03f597fe38435800d372f373739150"
+  },
+  "cocoon/contracts/examples/error_unknown_machine.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775431,
+    "ast_hash": "e8db6209cc47b96c462734eec701a456",
+    "semantic_hash": "e8db6209cc47b96c462734eec701a456"
+  },
+  "cocoon/contracts/examples/error_validation.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775431,
+    "ast_hash": "7f054c813015a46ecf80db55f5efd304",
+    "semantic_hash": "7f054c813015a46ecf80db55f5efd304"
+  },
+  "cocoon/contracts/examples/events.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754319,
+    "ast_hash": "f68ccbae21234de7b733a49f01703a83",
+    "semantic_hash": "f68ccbae21234de7b733a49f01703a83"
+  },
+  "cocoon/contracts/examples/session.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754319,
+    "ast_hash": "a62f49749759312974c1cf92c792c3f4",
+    "semantic_hash": "a62f49749759312974c1cf92c792c3f4"
+  },
+  "cocoon/contracts/examples/session_create.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754319,
+    "ast_hash": "0c2fc948f2a57eb1e3e9d7a75ce020f5",
+    "semantic_hash": "0c2fc948f2a57eb1e3e9d7a75ce020f5"
+  },
+  "cocoon/contracts/examples/state.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775433,
+    "ast_hash": "bd0c245063743cc23ad66506f6b1b2a9",
+    "semantic_hash": "bd0c245063743cc23ad66506f6b1b2a9"
+  },
+  "cocoon/contracts/examples/telemetry.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775433,
+    "ast_hash": "a11ef76aad521b214312d3d881df77c7",
+    "semantic_hash": "a11ef76aad521b214312d3d881df77c7"
+  },
+  "cocoon/contracts/examples/telemetry.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775433,
+    "ast_hash": "a9f6caea9a11d6366e88397ab8ba86e4",
+    "semantic_hash": "a9f6caea9a11d6366e88397ab8ba86e4"
+  },
+  "cocoon/contracts/examples/turn.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775434,
+    "ast_hash": "d7ac58718aa778f4935d97d5d1cf7136",
+    "semantic_hash": "d7ac58718aa778f4935d97d5d1cf7136"
+  },
+  "cocoon/contracts/examples/turn_alert_explained.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775434,
+    "ast_hash": "f00dd80be7f1c9ce2e730f8237aa94fb",
+    "semantic_hash": "f00dd80be7f1c9ce2e730f8237aa94fb"
+  },
+  "cocoon/contracts/examples/turn_completed.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775434,
+    "ast_hash": "12ae0ecdcc1f1c14cb13aa6421385c39",
+    "semantic_hash": "12ae0ecdcc1f1c14cb13aa6421385c39"
+  },
+  "cocoon/contracts/examples/turn_information_requested.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775435,
+    "ast_hash": "5a78d633d22cc41e8fe8a1657c1810ef",
+    "semantic_hash": "5a78d633d22cc41e8fe8a1657c1810ef"
+  },
+  "cocoon/contracts/examples/turn_processing.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775435,
+    "ast_hash": "d3dc813c94371b84a7bdee13cf40ec33",
+    "semantic_hash": "d3dc813c94371b84a7bdee13cf40ec33"
+  },
+  "cocoon/contracts/proposed/examples/index.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775435,
+    "ast_hash": "e17d07690c076e7966d6a755b0c0fdfd",
+    "semantic_hash": "e17d07690c076e7966d6a755b0c0fdfd"
+  },
+  "cocoon/contracts/proposed/examples/invalid/action_result_apply_schedule.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775435,
+    "ast_hash": "72cdca8d65bb90b13f90412c42b8a453",
+    "semantic_hash": "72cdca8d65bb90b13f90412c42b8a453"
+  },
+  "cocoon/contracts/proposed/examples/invalid/action_result_approval_marked_approved.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775436,
+    "ast_hash": "cfab709193a67237a999c76106f378fc",
+    "semantic_hash": "cfab709193a67237a999c76106f378fc"
+  },
+  "cocoon/contracts/proposed/examples/invalid/action_result_completed_without_record.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775436,
+    "ast_hash": "efe659abd7c6d26abfdc88590c8b0982",
+    "semantic_hash": "efe659abd7c6d26abfdc88590c8b0982"
+  },
+  "cocoon/contracts/proposed/examples/invalid/announcement_uncorrelated.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775436,
+    "ast_hash": "fe907cb92d6e60ec5e9322fe33f0164e",
+    "semantic_hash": "fe907cb92d6e60ec5e9322fe33f0164e"
+  },
+  "cocoon/contracts/proposed/examples/invalid/announcement_with_turn_id.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775437,
+    "ast_hash": "cf5a15e2bac4ab1b1283b1d60c9fca6d",
+    "semantic_hash": "cf5a15e2bac4ab1b1283b1d60c9fca6d"
+  },
+  "cocoon/contracts/proposed/examples/invalid/approval_pending_but_applied.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775437,
+    "ast_hash": "56ac4b24ff799d64f361de0e853e5e5d",
+    "semantic_hash": "56ac4b24ff799d64f361de0e853e5e5d"
+  },
+  "cocoon/contracts/proposed/examples/invalid/approval_rejected_but_applied.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775437,
+    "ast_hash": "df3288db058200d6f5044b76105b419a",
+    "semantic_hash": "df3288db058200d6f5044b76105b419a"
+  },
+  "cocoon/contracts/proposed/examples/invalid/cancel_bad_reason.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775438,
+    "ast_hash": "cfd61ad21f4e03bba12595ea65068360",
+    "semantic_hash": "cfd61ad21f4e03bba12595ea65068360"
+  },
+  "cocoon/contracts/proposed/examples/invalid/cancel_inconsistent.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775438,
+    "ast_hash": "77e6d2346c39a8446b5ad310e79ad214",
+    "semantic_hash": "77e6d2346c39a8446b5ad310e79ad214"
+  },
+  "cocoon/contracts/proposed/examples/invalid/classifier_arbitrary_tool.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775439,
+    "ast_hash": "a4fca6634dc7cfdb1b69f67ee9ce3811",
+    "semantic_hash": "a4fca6634dc7cfdb1b69f67ee9ce3811"
+  },
+  "cocoon/contracts/proposed/examples/invalid/classifier_low_certainty_acting.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775439,
+    "ast_hash": "378497b0d3f4fdc56e2db9d71fc2d82f",
+    "semantic_hash": "378497b0d3f4fdc56e2db9d71fc2d82f"
+  },
+  "cocoon/contracts/proposed/examples/invalid/command_result_queued_with_records.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775439,
+    "ast_hash": "5e1ba4baa1e0404c8b74bd6e70cdc957",
+    "semantic_hash": "5e1ba4baa1e0404c8b74bd6e70cdc957"
+  },
+  "cocoon/contracts/proposed/examples/invalid/command_unknown_kind.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775439,
+    "ast_hash": "b5566281e80b3642452a57e1bc1bfe5d",
+    "semantic_hash": "b5566281e80b3642452a57e1bc1bfe5d"
+  },
+  "cocoon/contracts/proposed/examples/invalid/conditions_forecast_without_issue_time.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77544,
+    "ast_hash": "a7c2826a84d3532bb5e045d72309d4f1",
+    "semantic_hash": "a7c2826a84d3532bb5e045d72309d4f1"
+  },
+  "cocoon/contracts/proposed/examples/invalid/consent_grant_without_notice.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77544,
+    "ast_hash": "b3a7a1ffabf6b63a17b820c3575d525e",
+    "semantic_hash": "b3a7a1ffabf6b63a17b820c3575d525e"
+  },
+  "cocoon/contracts/proposed/examples/invalid/content_video_available_without_checksum.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77544,
+    "ast_hash": "56a51a92a0dd7ed9880dffc55afd79c0",
+    "semantic_hash": "56a51a92a0dd7ed9880dffc55afd79c0"
+  },
+  "cocoon/contracts/proposed/examples/invalid/error_unknown_code.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775441,
+    "ast_hash": "53fb1fd849682d4129a8adb5b4552a99",
+    "semantic_hash": "53fb1fd849682d4129a8adb5b4552a99"
+  },
+  "cocoon/contracts/proposed/examples/invalid/estimate_fallback_without_missing_inputs.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775441,
+    "ast_hash": "bc72886aac123f25156aa84f5f28a60a",
+    "semantic_hash": "bc72886aac123f25156aa84f5f28a60a"
+  },
+  "cocoon/contracts/proposed/examples/invalid/human_impact_force_without_model.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775441,
+    "ast_hash": "20683ebbd70466df9a3baaafb9fbf5f5",
+    "semantic_hash": "20683ebbd70466df9a3baaafb9fbf5f5"
+  },
+  "cocoon/contracts/proposed/examples/invalid/incident_auto_draft_without_episode.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775442,
+    "ast_hash": "ae71a5eef34d7443f25166c72f8441a9",
+    "semantic_hash": "ae71a5eef34d7443f25166c72f8441a9"
+  },
+  "cocoon/contracts/proposed/examples/invalid/incident_confirmed_with_inferred_fact.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775442,
+    "ast_hash": "b4dd0aedb0589b8f8bee5f9e2754384c",
+    "semantic_hash": "b4dd0aedb0589b8f8bee5f9e2754384c"
+  },
+  "cocoon/contracts/proposed/examples/invalid/lesson_assignment_behaviour_unlinked.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775442,
+    "ast_hash": "4172db6adda2a0ffd7dc7160d98b024f",
+    "semantic_hash": "4172db6adda2a0ffd7dc7160d98b024f"
+  },
+  "cocoon/contracts/proposed/examples/invalid/lesson_completed_by_playback_only.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754428,
+    "ast_hash": "dc70d29f6ae9ddc41c9535e451b51787",
+    "semantic_hash": "dc70d29f6ae9ddc41c9535e451b51787"
+  },
+  "cocoon/contracts/proposed/examples/invalid/me_with_token.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754428,
+    "ast_hash": "e1e42cc0477ee03b3984f818af2f1e46",
+    "semantic_hash": "e1e42cc0477ee03b3984f818af2f1e46"
+  },
+  "cocoon/contracts/proposed/examples/invalid/precipitation_without_interval.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775444,
+    "ast_hash": "17ce9657f8b51799dec4172417f62b4d",
+    "semantic_hash": "17ce9657f8b51799dec4172417f62b4d"
+  },
+  "cocoon/contracts/proposed/examples/invalid/presentation_as_audio.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775444,
+    "ast_hash": "fb62f53df06f560b38cf2fde7e7fb28f",
+    "semantic_hash": "fb62f53df06f560b38cf2fde7e7fb28f"
+  },
+  "cocoon/contracts/proposed/examples/invalid/proximity_detected_without_distance.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775444,
+    "ast_hash": "4e2bee6d14d8a5e4ca7577d4b6632687",
+    "semantic_hash": "4e2bee6d14d8a5e4ca7577d4b6632687"
+  },
+  "cocoon/contracts/proposed/examples/invalid/quiz_ambiguous_marked_pass.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775445,
+    "ast_hash": "0f0f4028160c68108fa12456ba47445e",
+    "semantic_hash": "0f0f4028160c68108fa12456ba47445e"
+  },
+  "cocoon/contracts/proposed/examples/invalid/rule_published_without_citation.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775445,
+    "ast_hash": "bdf5f25c16f57366cb8099c2b37b8701",
+    "semantic_hash": "bdf5f25c16f57366cb8099c2b37b8701"
+  },
+  "cocoon/contracts/proposed/examples/invalid/sos_no_response_without_presentation.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775445,
+    "ast_hash": "dd7bbdd00dcc3c97a3c66d73a1c8eed1",
+    "semantic_hash": "dd7bbdd00dcc3c97a3c66d73a1c8eed1"
+  },
+  "cocoon/contracts/proposed/examples/invalid/supervisor_alert_wellbeing.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775446,
+    "ast_hash": "b4fd9bfc723594031d6478effca925f7",
+    "semantic_hash": "b4fd9bfc723594031d6478effca925f7"
+  },
+  "cocoon/contracts/proposed/examples/invalid/supervisor_alert_with_evidence.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775446,
+    "ast_hash": "b67736d48adba412ab4492292f5f37ff",
+    "semantic_hash": "b67736d48adba412ab4492292f5f37ff"
+  },
+  "cocoon/contracts/proposed/examples/invalid/supervisor_incident_draft_text.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775446,
+    "ast_hash": "e8c10ff2fef4fa5d995ab7ab33cabf67",
+    "semantic_hash": "e8c10ff2fef4fa5d995ab7ab33cabf67"
+  },
+  "cocoon/contracts/proposed/examples/invalid/supervisor_overview_nested_vitals.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754471,
+    "ast_hash": "85e974d581d0eaf1c3594376bfa490c5",
+    "semantic_hash": "85e974d581d0eaf1c3594376bfa490c5"
+  },
+  "cocoon/contracts/proposed/examples/invalid/supervisor_risk_with_raw_vitals.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754471,
+    "ast_hash": "d92ea1b764367b694e31ef126da4811c",
+    "semantic_hash": "d92ea1b764367b694e31ef126da4811c"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_delivery_unknown_with_text.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754471,
+    "ast_hash": "f9384df015f167b4cb280e82e0382cc8",
+    "semantic_hash": "f9384df015f167b4cb280e82e0382cc8"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_event.bad_event_id.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775448,
+    "ast_hash": "d571d0a151aca9482e6130c1f24cd218",
+    "semantic_hash": "d571d0a151aca9482e6130c1f24cd218"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_event.classifier_leak.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775448,
+    "ast_hash": "76c59574d7e4c22a844b4494d24b1621",
+    "semantic_hash": "76c59574d7e4c22a844b4494d24b1621"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_event.empty_delta.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775448,
+    "ast_hash": "6c2f6c05e60bb95694bb7c140cc0b721",
+    "semantic_hash": "6c2f6c05e60bb95694bb7c140cc0b721"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_event.unknown_type.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775449,
+    "ast_hash": "9e79b83975be7ad384cc34fea7daddec",
+    "semantic_hash": "9e79b83975be7ad384cc34fea7daddec"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_request_identity_override.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775449,
+    "ast_hash": "cf2df3525b27285a970cdcdfe7a363b9",
+    "semantic_hash": "cf2df3525b27285a970cdcdfe7a363b9"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_request_supersedes_itself.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775449,
+    "ast_hash": "8112f3c3b2cc59837884cf21ae7debd7",
+    "semantic_hash": "8112f3c3b2cc59837884cf21ae7debd7"
+  },
+  "cocoon/contracts/proposed/examples/invalid/turn_request_with_audio.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754502,
+    "ast_hash": "dda8eff62fdf5194bfde957c0cbadd6b",
+    "semantic_hash": "dda8eff62fdf5194bfde957c0cbadd6b"
+  },
+  "cocoon/contracts/proposed/examples/invalid/wellbeing_vitals_without_consent.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754502,
+    "ast_hash": "e95c3d7168f8a08501d481f50527ceda",
+    "semantic_hash": "e95c3d7168f8a08501d481f50527ceda"
+  },
+  "cocoon/contracts/proposed/examples/valid/action_plan_waiting_approval.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754502,
+    "ast_hash": "2fe27f07e4e070037a0b719e69d43eb2",
+    "semantic_hash": "2fe27f07e4e070037a0b719e69d43eb2"
+  },
+  "cocoon/contracts/proposed/examples/valid/action_result_approval_pending.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754502,
+    "ast_hash": "486428d9f75965ebca014017536d56fa",
+    "semantic_hash": "486428d9f75965ebca014017536d56fa"
+  },
+  "cocoon/contracts/proposed/examples/valid/announcement.alert_started.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775451,
+    "ast_hash": "b144c8aaa1e2236f72210e3288d631e7",
+    "semantic_hash": "b144c8aaa1e2236f72210e3288d631e7"
+  },
+  "cocoon/contracts/proposed/examples/valid/announcement_delivery_legacy.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775451,
+    "ast_hash": "692c622a5d96cb319b1be52be133535b",
+    "semantic_hash": "692c622a5d96cb319b1be52be133535b"
+  },
+  "cocoon/contracts/proposed/examples/valid/announcement_delivery_with_id.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775451,
+    "ast_hash": "27bff81b94a5ff0769a484740abf36ea",
+    "semantic_hash": "27bff81b94a5ff0769a484740abf36ea"
+  },
+  "cocoon/contracts/proposed/examples/valid/approval_approved_applied.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775452,
+    "ast_hash": "f4c1866c51feac544810961efbd6a5cb",
+    "semantic_hash": "f4c1866c51feac544810961efbd6a5cb"
+  },
+  "cocoon/contracts/proposed/examples/valid/approval_approved_not_applied.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775452,
+    "ast_hash": "e4ed323645ef8845c6254ea8cc3c87b9",
+    "semantic_hash": "e4ed323645ef8845c6254ea8cc3c87b9"
+  },
+  "cocoon/contracts/proposed/examples/valid/approval_decision.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775452,
+    "ast_hash": "0d3c9b831e628079fd18899a1d711208",
+    "semantic_hash": "0d3c9b831e628079fd18899a1d711208"
+  },
+  "cocoon/contracts/proposed/examples/valid/approval_escalation_pending.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754529,
+    "ast_hash": "54f013fd42a2214b81523cd6508aaaed",
+    "semantic_hash": "54f013fd42a2214b81523cd6508aaaed"
+  },
+  "cocoon/contracts/proposed/examples/valid/approval_pending.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754529,
+    "ast_hash": "a993d187ccf073f8c7e72af43698b171",
+    "semantic_hash": "a993d187ccf073f8c7e72af43698b171"
+  },
+  "cocoon/contracts/proposed/examples/valid/approval_rejected.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754529,
+    "ast_hash": "594998f9591a2bbdaf0a0b1d9017ab8d",
+    "semantic_hash": "594998f9591a2bbdaf0a0b1d9017ab8d"
+  },
+  "cocoon/contracts/proposed/examples/valid/cancel.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775454,
+    "ast_hash": "a361943d1b0c45a1f9c6a9c00dfba809",
+    "semantic_hash": "a361943d1b0c45a1f9c6a9c00dfba809"
+  },
+  "cocoon/contracts/proposed/examples/valid/cancel_already_completed.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775454,
+    "ast_hash": "1b558ac276d47bf421e8de0e37ef9b1f",
+    "semantic_hash": "1b558ac276d47bf421e8de0e37ef9b1f"
+  },
+  "cocoon/contracts/proposed/examples/valid/cancel_pending.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775454,
+    "ast_hash": "4bc26ea197e35a7923930bc03db63a7b",
+    "semantic_hash": "4bc26ea197e35a7923930bc03db63a7b"
+  },
+  "cocoon/contracts/proposed/examples/valid/classifier_multi_action.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775455,
+    "ast_hash": "4704e61b2f29d16837690b266726aea3",
+    "semantic_hash": "4704e61b2f29d16837690b266726aea3"
+  },
+  "cocoon/contracts/proposed/examples/valid/command_offline_incident_draft.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775455,
+    "ast_hash": "9d687bac343ecef818053eac7418e66a",
+    "semantic_hash": "9d687bac343ecef818053eac7418e66a"
+  },
+  "cocoon/contracts/proposed/examples/valid/command_result_duplicate_upload.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775455,
+    "ast_hash": "8039626cbe323e74793067ef37f9e4a2",
+    "semantic_hash": "8039626cbe323e74793067ef37f9e4a2"
+  },
+  "cocoon/contracts/proposed/examples/valid/command_result_offline_after_reconnect.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775456,
+    "ast_hash": "8b9684f53a7bd1605aecce290774d0ce",
+    "semantic_hash": "8b9684f53a7bd1605aecce290774d0ce"
+  },
+  "cocoon/contracts/proposed/examples/valid/command_result_stale_version.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775456,
+    "ast_hash": "202e0cbc2f7b05aeb77ed7351a042500",
+    "semantic_hash": "202e0cbc2f7b05aeb77ed7351a042500"
+  },
+  "cocoon/contracts/proposed/examples/valid/command_sos_respond.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775456,
+    "ast_hash": "7870386ce08d8ea3a993b8135e2d5008",
+    "semantic_hash": "7870386ce08d8ea3a993b8135e2d5008"
+  },
+  "cocoon/contracts/proposed/examples/valid/command_task_start.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775457,
+    "ast_hash": "9eecefe7ab385f50d2e9d56af8dbccf8",
+    "semantic_hash": "9eecefe7ab385f50d2e9d56af8dbccf8"
+  },
+  "cocoon/contracts/proposed/examples/valid/conditions_forecast.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775457,
+    "ast_hash": "a39d17ac8bec30c10da5f6aa083c3fb6",
+    "semantic_hash": "a39d17ac8bec30c10da5f6aa083c3fb6"
+  },
+  "cocoon/contracts/proposed/examples/valid/consent_grant.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775457,
+    "ast_hash": "7edc2f155d1104866f488b8707ab38dc",
+    "semantic_hash": "7edc2f155d1104866f488b8707ab38dc"
+  },
+  "cocoon/contracts/proposed/examples/valid/consent_revoke.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775458,
+    "ast_hash": "46599113a41f27e6d0281fb9a1c01fac",
+    "semantic_hash": "46599113a41f27e6d0281fb9a1c01fac"
+  },
+  "cocoon/contracts/proposed/examples/valid/consent_state_after_revoke.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775458,
+    "ast_hash": "0afaaa1067fe6f31bc0e20db61de9144",
+    "semantic_hash": "0afaaa1067fe6f31bc0e20db61de9144"
+  },
+  "cocoon/contracts/proposed/examples/valid/content_video_not_yet_supplied.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775458,
+    "ast_hash": "f5ba77654f8223ef30669f8d89ba7661",
+    "semantic_hash": "f5ba77654f8223ef30669f8d89ba7661"
+  },
+  "cocoon/contracts/proposed/examples/valid/error_unknown_machine.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775459,
+    "ast_hash": "bcfc7d638effa932008435023c91c5aa",
+    "semantic_hash": "bcfc7d638effa932008435023c91c5aa"
+  },
+  "cocoon/contracts/proposed/examples/valid/estimate_benchmark_reduced.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775459,
+    "ast_hash": "c1087bf3415ea2d5322a94071896495d",
+    "semantic_hash": "c1087bf3415ea2d5322a94071896495d"
+  },
+  "cocoon/contracts/proposed/examples/valid/events_page_target.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775459,
+    "ast_hash": "a43375d62f0ff12da8fd642125aa73d9",
+    "semantic_hash": "a43375d62f0ff12da8fd642125aa73d9"
+  },
+  "cocoon/contracts/proposed/examples/valid/incident_auto_draft.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77546,
+    "ast_hash": "ff34af86db6b55c1c9b43548d8199398",
+    "semantic_hash": "ff34af86db6b55c1c9b43548d8199398"
+  },
+  "cocoon/contracts/proposed/examples/valid/incident_confirmed.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77546,
+    "ast_hash": "f3d578d75db06981fed57256959fe9d5",
+    "semantic_hash": "f3d578d75db06981fed57256959fe9d5"
+  },
+  "cocoon/contracts/proposed/examples/valid/lesson_assignment_behaviour.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77546,
+    "ast_hash": "73194f8ac233cfd22453a477ff8adbd7",
+    "semantic_hash": "73194f8ac233cfd22453a477ff8adbd7"
+  },
+  "cocoon/contracts/proposed/examples/valid/lesson_progress_awaiting_assessment.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754612,
+    "ast_hash": "b3f5bd9c3d6a8931e2274da4607a25ce",
+    "semantic_hash": "b3f5bd9c3d6a8931e2274da4607a25ce"
+  },
+  "cocoon/contracts/proposed/examples/valid/lesson_seatbelt_60s.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754612,
+    "ast_hash": "82eb75a7dedb13072fc5e5ee62ff5693",
+    "semantic_hash": "82eb75a7dedb13072fc5e5ee62ff5693"
+  },
+  "cocoon/contracts/proposed/examples/valid/me_operator.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754612,
+    "ast_hash": "95eb122d81706bf088a4084472f2c43f",
+    "semantic_hash": "95eb122d81706bf088a4084472f2c43f"
+  },
+  "cocoon/contracts/proposed/examples/valid/me_supervisor.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775462,
+    "ast_hash": "d113131b2b688066b2fe1ab220c9514e",
+    "semantic_hash": "d113131b2b688066b2fe1ab220c9514e"
+  },
+  "cocoon/contracts/proposed/examples/valid/presence.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775462,
+    "ast_hash": "b87d80ce77ebc981cbba1dd4b7c65164",
+    "semantic_hash": "b87d80ce77ebc981cbba1dd4b7c65164"
+  },
+  "cocoon/contracts/proposed/examples/valid/presentation.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775462,
+    "ast_hash": "96e13ea463f5acd11ec2552e1a5abc69",
+    "semantic_hash": "96e13ea463f5acd11ec2552e1a5abc69"
+  },
+  "cocoon/contracts/proposed/examples/valid/presentation_screen.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754629,
+    "ast_hash": "ec36d831f03af3d2c89c1d611322d2be",
+    "semantic_hash": "ec36d831f03af3d2c89c1d611322d2be"
+  },
+  "cocoon/contracts/proposed/examples/valid/quiz_attempt_failed.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754629,
+    "ast_hash": "1fb0152973df6dd907bdba1ce11bdb16",
+    "semantic_hash": "1fb0152973df6dd907bdba1ce11bdb16"
+  },
+  "cocoon/contracts/proposed/examples/valid/quiz_attempt_passed.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754629,
+    "ast_hash": "6c8e7fa1bf157dca26f4a9b7c75c7996",
+    "semantic_hash": "6c8e7fa1bf157dca26f4a9b7c75c7996"
+  },
+  "cocoon/contracts/proposed/examples/valid/session_create_target.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754638,
+    "ast_hash": "552b551626cb206f6a87947eda2f2841",
+    "semantic_hash": "552b551626cb206f6a87947eda2f2841"
+  },
+  "cocoon/contracts/proposed/examples/valid/sos_responded_ok.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754638,
+    "ast_hash": "110a746138a8a7c5b4774aa88bbd96b3",
+    "semantic_hash": "110a746138a8a7c5b4774aa88bbd96b3"
+  },
+  "cocoon/contracts/proposed/examples/valid/sos_unreachable_notified.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754638,
+    "ast_hash": "eeb14cbe879ced9b0d960266b63f6db9",
+    "semantic_hash": "eeb14cbe879ced9b0d960266b63f6db9"
+  },
+  "cocoon/contracts/proposed/examples/valid/state_target_operator_private.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775465,
+    "ast_hash": "07336ad319e8730b71cf75666e6c7a45",
+    "semantic_hash": "07336ad319e8730b71cf75666e6c7a45"
+  },
+  "cocoon/contracts/proposed/examples/valid/supervisor_feed.risk_changed.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775465,
+    "ast_hash": "1739fa691ac59a8e5e8902d0a0ed7af5",
+    "semantic_hash": "1739fa691ac59a8e5e8902d0a0ed7af5"
+  },
+  "cocoon/contracts/proposed/examples/valid/supervisor_overview_safe.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775465,
+    "ast_hash": "d1d015ff16ca7ab8ad5b7ac3a897639e",
+    "semantic_hash": "d1d015ff16ca7ab8ad5b7ac3a897639e"
+  },
+  "cocoon/contracts/proposed/examples/valid/task_assignment.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775466,
+    "ast_hash": "bebe625c9c43f2a9e93d66a94e55f7ed",
+    "semantic_hash": "bebe625c9c43f2a9e93d66a94e55f7ed"
+  },
+  "cocoon/contracts/proposed/examples/valid/telemetry_ingest.response.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775466,
+    "ast_hash": "4feabb794be6bc1d9628077427809c26",
+    "semantic_hash": "4feabb794be6bc1d9628077427809c26"
+  },
+  "cocoon/contracts/proposed/examples/valid/telemetry_v1_body_still_accepted.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775466,
+    "ast_hash": "8598e8856f05919480ac3edd974d7304",
+    "semantic_hash": "8598e8856f05919480ac3edd974d7304"
+  },
+  "cocoon/contracts/proposed/examples/valid/telemetry_v2_batch.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775467,
+    "ast_hash": "89e0438755694f9292966a2b234b718a",
+    "semantic_hash": "89e0438755694f9292966a2b234b718a"
+  },
+  "cocoon/contracts/proposed/examples/valid/turn_delivery_interrupted_unknown.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775467,
+    "ast_hash": "b479b68a40f3228c787c1e1a12687dfe",
+    "semantic_hash": "b479b68a40f3228c787c1e1a12687dfe"
+  },
+  "cocoon/contracts/proposed/examples/valid/turn_delivery_played_exact.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775467,
+    "ast_hash": "a0155f56f17118c0e50032ac7f8bf1b2",
+    "semantic_hash": "a0155f56f17118c0e50032ac7f8bf1b2"
+  },
+  "cocoon/contracts/proposed/examples/valid/turn_event.speech_delta.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775467,
+    "ast_hash": "9ccf3595db4d0dce061e1e184d9b7200",
+    "semantic_hash": "9ccf3595db4d0dce061e1e184d9b7200"
+  },
+  "cocoon/contracts/proposed/examples/valid/turn_result_target.cancelled.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775468,
+    "ast_hash": "6b7028910ebe81b1c3c2c92a7e426a9c",
+    "semantic_hash": "6b7028910ebe81b1c3c2c92a7e426a9c"
+  },
+  "cocoon/contracts/proposed/examples/valid/turn_stream.request.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775468,
+    "ast_hash": "0bb3da9eaf3bc3836190185fafb3d44b",
+    "semantic_hash": "0bb3da9eaf3bc3836190185fafb3d44b"
+  },
+  "cocoon/contracts/proposed/exchanges/approval_decisions.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775468,
+    "ast_hash": "b6b0eb3bc2a80da39aef3b9ec212f58d",
+    "semantic_hash": "b6b0eb3bc2a80da39aef3b9ec212f58d"
+  },
+  "cocoon/contracts/proposed/exchanges/command_offline_sync.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775469,
+    "ast_hash": "ab7d99b90ce4a28aba20b634557bd4bb",
+    "semantic_hash": "ab7d99b90ce4a28aba20b634557bd4bb"
+  },
+  "cocoon/contracts/proposed/exchanges/session_unknown_machine.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775469,
+    "ast_hash": "caca31052df9bbd06a8ee9b5ec2ae24d",
+    "semantic_hash": "caca31052df9bbd06a8ee9b5ec2ae24d"
+  },
+  "cocoon/contracts/proposed/exchanges/turn_cancellation.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775469,
+    "ast_hash": "40c470f302a0976a3dd2d77424fbc98a",
+    "semantic_hash": "40c470f302a0976a3dd2d77424fbc98a"
+  },
+  "cocoon/contracts/proposed/exchanges/turn_replay_cursors.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77547,
+    "ast_hash": "1fc1d8bc48783b219857d69fe0bbebbc",
+    "semantic_hash": "1fc1d8bc48783b219857d69fe0bbebbc"
+  },
+  "cocoon/contracts/proposed/exchanges/turn_stream_duplicate_and_conflict.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77547,
+    "ast_hash": "572e47a29b98a0aaf6735ace15b69ef1",
+    "semantic_hash": "572e47a29b98a0aaf6735ace15b69ef1"
+  },
+  "cocoon/contracts/proposed/internal/action-plan.schema.json": {
+    "mtime": 1790229747.6767216,
+    "seen": 1790231473.77547,
+    "ast_hash": "14bae7f4ab612c1a9b9bafaee219243e",
+    "semantic_hash": "14bae7f4ab612c1a9b9bafaee219243e"
+  },
+  "cocoon/contracts/proposed/internal/classifier-decision.schema.json": {
+    "mtime": 1790229747.6764066,
+    "seen": 1790231473.7754712,
+    "ast_hash": "5b3dfabc163f5a32621cec4e7f306079",
+    "semantic_hash": "5b3dfabc163f5a32621cec4e7f306079"
+  },
+  "cocoon/contracts/proposed/openapi.json": {
+    "mtime": 1790229747.6746266,
+    "seen": 1790231473.7754712,
+    "ast_hash": "256fb39821f300b938c12aefea2ac3f4",
+    "semantic_hash": "256fb39821f300b938c12aefea2ac3f4"
+  },
+  "cocoon/contracts/proposed/schemas/cocoon.announcements.v1.schema.json": {
+    "mtime": 1790229747.6761177,
+    "seen": 1790231473.7754722,
+    "ast_hash": "a04010d6f49487cb058dd145b74f704c",
+    "semantic_hash": "a04010d6f49487cb058dd145b74f704c"
+  },
+  "cocoon/contracts/proposed/schemas/cocoon.command.v1.schema.json": {
+    "mtime": 1790229747.6763372,
+    "seen": 1790231473.7754722,
+    "ast_hash": "7a571b62ccc6b532b7da5a9ae0d0bd4f",
+    "semantic_hash": "7a571b62ccc6b532b7da5a9ae0d0bd4f"
+  },
+  "cocoon/contracts/proposed/schemas/cocoon.supervisor-feed.v1.schema.json": {
+    "mtime": 1790229747.6762505,
+    "seen": 1790231473.7754729,
+    "ast_hash": "9e74ba82c47453b6f051a085659657ab",
+    "semantic_hash": "9e74ba82c47453b6f051a085659657ab"
+  },
+  "cocoon/contracts/proposed/schemas/cocoon.turn-stream.v1.schema.json": {
+    "mtime": 1790229747.675922,
+    "seen": 1790231473.7754729,
+    "ast_hash": "a9b70b1c59a8734654031a01ab8e90a8",
+    "semantic_hash": "a9b70b1c59a8734654031a01ab8e90a8"
+  },
+  "cocoon/contracts/proposed/sequences/announcements_start_then_clear.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754729,
+    "ast_hash": "cec8380b16c596f154b8fb997205d235",
+    "semantic_hash": "cec8380b16c596f154b8fb997205d235"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_announcements_duplicate_event.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754738,
+    "ast_hash": "09e1a7fd1c105fcd60d8f7527421a0fe",
+    "semantic_hash": "09e1a7fd1c105fcd60d8f7527421a0fe"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_delta_after_terminal.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754738,
+    "ast_hash": "34c93ac89cd90a23d5d1ab1a0b6b3ed9",
+    "semantic_hash": "34c93ac89cd90a23d5d1ab1a0b6b3ed9"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_identity_change.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754738,
+    "ast_hash": "e4e41ba96a3f6a5d262bd450873e7813",
+    "semantic_hash": "e4e41ba96a3f6a5d262bd450873e7813"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_missing_accepted.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754738,
+    "ast_hash": "b7b8abe00bd684a1033ec579a5d29eaa",
+    "semantic_hash": "b7b8abe00bd684a1033ec579a5d29eaa"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_sequence_regression.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775475,
+    "ast_hash": "8eeb269907b8a4357ac5addc459d0c17",
+    "semantic_hash": "8eeb269907b8a4357ac5addc459d0c17"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_speech_mismatch.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775475,
+    "ast_hash": "548b74327d0bdeffb60288a6afecf834",
+    "semantic_hash": "548b74327d0bdeffb60288a6afecf834"
+  },
+  "cocoon/contracts/proposed/sequences/invalid_two_terminals.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775476,
+    "ast_hash": "f7316860bc1113d6da878b05e992c51e",
+    "semantic_hash": "f7316860bc1113d6da878b05e992c51e"
+  },
+  "cocoon/contracts/proposed/sequences/turn_cancelled_after_commit.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775476,
+    "ast_hash": "0192db766b8a60dd2f564a037643e9d7",
+    "semantic_hash": "0192db766b8a60dd2f564a037643e9d7"
+  },
+  "cocoon/contracts/proposed/sequences/turn_completed_with_approval_pending.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775476,
+    "ast_hash": "dfc908079afff26ab06fc06908804237",
+    "semantic_hash": "dfc908079afff26ab06fc06908804237"
+  },
+  "cocoon/contracts/proposed/sequences/turn_failed_known_and_unknown_actions.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775476,
+    "ast_hash": "563222d329fb73c1f6eee76dff39101d",
+    "semantic_hash": "563222d329fb73c1f6eee76dff39101d"
+  },
+  "cocoon/contracts/proposed/sequences/turn_replay_after_cursor.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775477,
+    "ast_hash": "65968e54d059546485761426b64b236d",
+    "semantic_hash": "65968e54d059546485761426b64b236d"
+  },
+  "cocoon/contracts/proposed/sse/turn_stream_chunked_unicode.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775477,
+    "ast_hash": "5e0a7bf7366e929df5a88e95fe01d673",
+    "semantic_hash": "5e0a7bf7366e929df5a88e95fe01d673"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775477,
+    "ast_hash": "ea0daaa4b03f6cd3b501873b6107f5d5",
+    "semantic_hash": "ea0daaa4b03f6cd3b501873b6107f5d5"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/__main__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754781,
+    "ast_hash": "2681e16802a790e2ee8f0da895e6c6ec",
+    "semantic_hash": "2681e16802a790e2ee8f0da895e6c6ec"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/api/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754781,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/api/app.py": {
+    "mtime": 1790229087.7083213,
+    "seen": 1790231473.7754781,
+    "ast_hash": "32e0217f5dac81378955755b5fd01189",
+    "semantic_hash": "32e0217f5dac81378955755b5fd01189"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/api/schemas.py": {
+    "mtime": 1790229746.3028893,
+    "seen": 1790231473.775479,
+    "ast_hash": "08c72eadae1055635f779ca30b9e4bf0",
+    "semantic_hash": "08c72eadae1055635f779ca30b9e4bf0"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/auth.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775479,
+    "ast_hash": "3fc890156a568f7a6ccf094956e50a88",
+    "semantic_hash": "3fc890156a568f7a6ccf094956e50a88"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/backup.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775479,
+    "ast_hash": "9d56b6b517a43474437a8f192cdf7104",
+    "semantic_hash": "9d56b6b517a43474437a8f192cdf7104"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/catalog.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77548,
+    "ast_hash": "e5ea8e77e0317cfc0fbf672c67e78ebf",
+    "semantic_hash": "e5ea8e77e0317cfc0fbf672c67e78ebf"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/config.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77548,
+    "ast_hash": "803d3c10abc86414fedcce6e4b53ef5d",
+    "semantic_hash": "803d3c10abc86414fedcce6e4b53ef5d"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77548,
+    "ast_hash": "3610ffc338c68050a2b36395d318de83",
+    "semantic_hash": "3610ffc338c68050a2b36395d318de83"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/announcements.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775481,
+    "ast_hash": "877f1b6d6d7b05c12ca06fd6c617169d",
+    "semantic_hash": "877f1b6d6d7b05c12ca06fd6c617169d"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/approvals.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775481,
+    "ast_hash": "7908e4d412d7c3e54e5ffe0a3dfa8c2f",
+    "semantic_hash": "7908e4d412d7c3e54e5ffe0a3dfa8c2f"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/commands.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775481,
+    "ast_hash": "02d1f1a179547c2ee267575417a9d681",
+    "semantic_hash": "02d1f1a179547c2ee267575417a9d681"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/common.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754822,
+    "ast_hash": "b61c7db45f3e247494e564d88d902321",
+    "semantic_hash": "b61c7db45f3e247494e564d88d902321"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/identity.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754822,
+    "ast_hash": "6433ac1f14693108b955801da089abb9",
+    "semantic_hash": "6433ac1f14693108b955801da089abb9"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/incidents.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754822,
+    "ast_hash": "29a31c666442d955d6ccc77a8fff775f",
+    "semantic_hash": "29a31c666442d955d6ccc77a8fff775f"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/internal.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775483,
+    "ast_hash": "8d62459686694e8e621d91f3dc0534ec",
+    "semantic_hash": "8d62459686694e8e621d91f3dc0534ec"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/lms.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775483,
+    "ast_hash": "d5e4f2d18e8f0459ed1798eebc42d334",
+    "semantic_hash": "d5e4f2d18e8f0459ed1798eebc42d334"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/rules.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775483,
+    "ast_hash": "6ef4cd8e09dacadd7d604043395aa083",
+    "semantic_hash": "6ef4cd8e09dacadd7d604043395aa083"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/sequences.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754838,
+    "ast_hash": "c52a7b2b94a0d16395bcd78b36e01061",
+    "semantic_hash": "c52a7b2b94a0d16395bcd78b36e01061"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/sos.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754838,
+    "ast_hash": "5c883b1780057025d3eb11f3323abe04",
+    "semantic_hash": "5c883b1780057025d3eb11f3323abe04"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/spec.py": {
+    "mtime": 1790229150.283754,
+    "seen": 1790231473.7754838,
+    "ast_hash": "109623ea211e735bf6c4ba48f081daf3",
+    "semantic_hash": "109623ea211e735bf6c4ba48f081daf3"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/supervisor.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775485,
+    "ast_hash": "709de8ba2c2903e44fc36018881a041d",
+    "semantic_hash": "709de8ba2c2903e44fc36018881a041d"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/tasks.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775485,
+    "ast_hash": "cf2133c8587f63b48f046c4156ffe3bb",
+    "semantic_hash": "cf2133c8587f63b48f046c4156ffe3bb"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/telemetry.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775485,
+    "ast_hash": "8a502b3886f73ac33e5669abfb1df85e",
+    "semantic_hash": "8a502b3886f73ac33e5669abfb1df85e"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/contract/turns.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775486,
+    "ast_hash": "7e8316b9ac7e4ee61c36dcd622754598",
+    "semantic_hash": "7e8316b9ac7e4ee61c36dcd622754598"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/demo_site.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775486,
+    "ast_hash": "702d7e2d0e3a70c155f843b86c8cefac",
+    "semantic_hash": "702d7e2d0e3a70c155f843b86c8cefac"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/graph/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775486,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/graph/brain.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775487,
+    "ast_hash": "e5597efffeeda64c34ae559e9926460c",
+    "semantic_hash": "e5597efffeeda64c34ae559e9926460c"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/graph/builder.py": {
+    "mtime": 1790229099.51466,
+    "seen": 1790231473.775487,
+    "ast_hash": "40bc8da92af02444439acd2e271e1522",
+    "semantic_hash": "40bc8da92af02444439acd2e271e1522"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775487,
+    "ast_hash": "0f47bbff0938bffe739f63d108deb0e8",
+    "semantic_hash": "0f47bbff0938bffe739f63d108deb0e8"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/__main__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775487,
+    "ast_hash": "fe8955cfef47071e0eb7950d59ad3d7e",
+    "semantic_hash": "fe8955cfef47071e0eb7950d59ad3d7e"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/api.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775488,
+    "ast_hash": "98ef60dcd81840197c95abab0c93ee70",
+    "semantic_hash": "98ef60dcd81840197c95abab0c93ee70"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/app.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775488,
+    "ast_hash": "837639f61e65b8ee35d8f4e9f7371ce2",
+    "semantic_hash": "837639f61e65b8ee35d8f4e9f7371ce2"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/capture.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775488,
+    "ast_hash": "68045854207737ce1b6369bd9f1dc6bd",
+    "semantic_hash": "68045854207737ce1b6369bd9f1dc6bd"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/db.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775489,
+    "ast_hash": "376339e8a626e223505380dbcc60a177",
+    "semantic_hash": "376339e8a626e223505380dbcc60a177"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/settings.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775489,
+    "ast_hash": "2fe68008437ead89df049c441cb304fc",
+    "semantic_hash": "2fe68008437ead89df049c441cb304fc"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/workflow.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775489,
+    "ast_hash": "c441720ea5bd56f58478fe080385ef44",
+    "semantic_hash": "c441720ea5bd56f58478fe080385ef44"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/migrations.py": {
+    "mtime": 1790229041.06841,
+    "seen": 1790231473.77549,
+    "ast_hash": "08d11d52cc3e054b7321e82cc41dba7d",
+    "semantic_hash": "08d11d52cc3e054b7321e82cc41dba7d"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/rules.py": {
+    "mtime": 1790229099.5144727,
+    "seen": 1790231473.77549,
+    "ast_hash": "b1967edefc1438f70c9f29b0768ae354",
+    "semantic_hash": "b1967edefc1438f70c9f29b0768ae354"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/service.py": {
+    "mtime": 1790229084.3920527,
+    "seen": 1790231473.77549,
+    "ast_hash": "a5e17bb23e606f8cc6b20bfdfe8c3ef0",
+    "semantic_hash": "a5e17bb23e606f8cc6b20bfdfe8c3ef0"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/simulation.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775491,
+    "ast_hash": "acb38ceedd3565bcc66428f6e021a7a4",
+    "semantic_hash": "acb38ceedd3565bcc66428f6e021a7a4"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/store.py": {
+    "mtime": 1790229830.5072312,
+    "seen": 1790231473.775491,
+    "ast_hash": "79d52e23e6fad677509c47b208325123",
+    "semantic_hash": "79d52e23e6fad677509c47b208325123"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/token_admin.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775491,
+    "ast_hash": "d7bc09301a8d6ad9e6621764667d2dfe",
+    "semantic_hash": "d7bc09301a8d6ad9e6621764667d2dfe"
+  },
+  "cocoon/langgraph-agent/demo/demo_site_v1.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754922,
+    "ast_hash": "ddf26ea47d4ff57221ea5e068c0def0f",
+    "semantic_hash": "ddf26ea47d4ff57221ea5e068c0def0f"
+  },
+  "cocoon/langgraph-agent/policies/safety_policy_v1.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754922,
+    "ast_hash": "8362178283d2818a071c49f4eb3f634b",
+    "semantic_hash": "8362178283d2818a071c49f4eb3f634b"
+  },
+  "cocoon/langgraph-agent/pyproject.toml": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754922,
+    "ast_hash": "2ae27778c4d5e78debebcfd7eb59055e",
+    "semantic_hash": "2ae27778c4d5e78debebcfd7eb59055e"
+  },
+  "cocoon/langgraph-agent/scripts/_http.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754931,
+    "ast_hash": "0205ffd60e802a90dc685c82a7bbb8ef",
+    "semantic_hash": "0205ffd60e802a90dc685c82a7bbb8ef"
+  },
+  "cocoon/langgraph-agent/scripts/actor_tokens.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754931,
+    "ast_hash": "18358c74a48c78ef4b8081b6b1db2738",
+    "semantic_hash": "18358c74a48c78ef4b8081b6b1db2738"
+  },
+  "cocoon/langgraph-agent/scripts/backup_db.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754931,
+    "ast_hash": "6e5ab0d67ed011c86d1adec1833b4a9c",
+    "semantic_hash": "6e5ab0d67ed011c86d1adec1833b4a9c"
+  },
+  "cocoon/langgraph-agent/scripts/chat_cli.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754939,
+    "ast_hash": "73d9f849eb26963f7ff4bab4cb896c0c",
+    "semantic_hash": "73d9f849eb26963f7ff4bab4cb896c0c"
+  },
+  "cocoon/langgraph-agent/scripts/demo_operator.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754939,
+    "ast_hash": "faf833bfdbda461b770f1454835236e0",
+    "semantic_hash": "faf833bfdbda461b770f1454835236e0"
+  },
+  "cocoon/langgraph-agent/scripts/export_openapi.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754939,
+    "ast_hash": "c5ea38e8249c52245eec3a4698f5d53a",
+    "semantic_hash": "c5ea38e8249c52245eec3a4698f5d53a"
+  },
+  "cocoon/langgraph-agent/scripts/export_proposed_contract.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754948,
+    "ast_hash": "ec856eec2429dc8f36905cf51c3bf1fc",
+    "semantic_hash": "ec856eec2429dc8f36905cf51c3bf1fc"
+  },
+  "cocoon/langgraph-agent/scripts/insights_db_setup.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754948,
+    "ast_hash": "e27903c39163edb48ff438c14b5d90c6",
+    "semantic_hash": "e27903c39163edb48ff438c14b5d90c6"
+  },
+  "cocoon/langgraph-agent/scripts/reset_db.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7754948,
+    "ast_hash": "69731d6d5b1e89e4c3135344e07b4474",
+    "semantic_hash": "69731d6d5b1e89e4c3135344e07b4474"
+  },
+  "cocoon/langgraph-agent/scripts/seed_demo.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775496,
+    "ast_hash": "98bc9c73ffa098b7e37cf65d1333bf14",
+    "semantic_hash": "98bc9c73ffa098b7e37cf65d1333bf14"
+  },
+  "cocoon/langgraph-agent/scripts/simulate_machine.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775496,
+    "ast_hash": "8516967953d3b2e591782284609e170a",
+    "semantic_hash": "8516967953d3b2e591782284609e170a"
+  },
+  "cocoon/langgraph-agent/scripts/simulate_telemetry.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775496,
+    "ast_hash": "756e9babb9e4f8f33e252fb4d76af6e4",
+    "semantic_hash": "756e9babb9e4f8f33e252fb4d76af6e4"
+  },
+  "cocoon/langgraph-agent/scripts/smoke.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775497,
+    "ast_hash": "cb0a8253ea48985cbbd232da5c65a1cf",
+    "semantic_hash": "cb0a8253ea48985cbbd232da5c65a1cf"
+  },
+  "cocoon/langgraph-agent/tests/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775497,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "cocoon/langgraph-agent/tests/conftest.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775497,
+    "ast_hash": "28d7792a0c6931d6de89f3c72b8ce0e8",
+    "semantic_hash": "28d7792a0c6931d6de89f3c72b8ce0e8"
+  },
+  "cocoon/langgraph-agent/tests/fixtures/baseline_v1_schema.sql": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775498,
+    "ast_hash": "340e199c4a3891e732a3d50928ac6260",
+    "semantic_hash": "340e199c4a3891e732a3d50928ac6260"
+  },
+  "cocoon/langgraph-agent/tests/fixtures/session_bindings.json": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775498,
+    "ast_hash": "9db5d6833b270d6ef356d380b97adf24",
+    "semantic_hash": "9db5d6833b270d6ef356d380b97adf24"
+  },
+  "cocoon/langgraph-agent/tests/test_api.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775498,
+    "ast_hash": "8c343c97118074b04b52b1872812ee7c",
+    "semantic_hash": "8c343c97118074b04b52b1872812ee7c"
+  },
+  "cocoon/langgraph-agent/tests/test_auth.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775499,
+    "ast_hash": "dfd9845a9aa17e266bae472bec56cec9",
+    "semantic_hash": "dfd9845a9aa17e266bae472bec56cec9"
+  },
+  "cocoon/langgraph-agent/tests/test_catalog.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775499,
+    "ast_hash": "4ccef7094cc14bf92b26d5a889386bcf",
+    "semantic_hash": "4ccef7094cc14bf92b26d5a889386bcf"
+  },
+  "cocoon/langgraph-agent/tests/test_contract.py": {
+    "mtime": 1790229253.2706902,
+    "seen": 1790231473.775499,
+    "ast_hash": "ab1ca3ac8e5956137a02852b72f6aad4",
+    "semantic_hash": "ab1ca3ac8e5956137a02852b72f6aad4"
+  },
+  "cocoon/langgraph-agent/tests/test_detections.py": {
+    "mtime": 1790229830.5075767,
+    "seen": 1790231473.775499,
+    "ast_hash": "3c5c2bc6ffb66ae86d466e85fbf383fa",
+    "semantic_hash": "3c5c2bc6ffb66ae86d466e85fbf383fa"
+  },
+  "cocoon/langgraph-agent/tests/test_incidents.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755,
+    "ast_hash": "8381d3f7373c83a4d5d85331dec3dc81",
+    "semantic_hash": "8381d3f7373c83a4d5d85331dec3dc81"
+  },
+  "cocoon/langgraph-agent/tests/test_live_brain_offline.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755,
+    "ast_hash": "4e9adc7ab8ffd88878b7935c9e65686c",
+    "semantic_hash": "4e9adc7ab8ffd88878b7935c9e65686c"
+  },
+  "cocoon/langgraph-agent/tests/test_migrations.py": {
+    "mtime": 1790229150.2835953,
+    "seen": 1790231473.7755,
+    "ast_hash": "338f9a013344448ef394eb74f62fde0d",
+    "semantic_hash": "338f9a013344448ef394eb74f62fde0d"
+  },
+  "cocoon/langgraph-agent/tests/test_mock_brain.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775501,
+    "ast_hash": "18385825a6638f4a1e35578e611ee0d5",
+    "semantic_hash": "18385825a6638f4a1e35578e611ee0d5"
+  },
+  "cocoon/langgraph-agent/tests/test_operator_context.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775501,
+    "ast_hash": "1ad19def71e5b517fd2bb24650c4b3da",
+    "semantic_hash": "1ad19def71e5b517fd2bb24650c4b3da"
+  },
+  "cocoon/langgraph-agent/tests/test_proposed_contract.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775501,
+    "ast_hash": "1383bb45cef3a53d37c654c16d555f96",
+    "semantic_hash": "1383bb45cef3a53d37c654c16d555f96"
+  },
+  "cocoon/langgraph-agent/tests/test_resilience.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775502,
+    "ast_hash": "19d3c136fc44d0de51a8518d95e4d6af",
+    "semantic_hash": "19d3c136fc44d0de51a8518d95e4d6af"
+  },
+  "cocoon/langgraph-agent/tests/test_safety.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775502,
+    "ast_hash": "d028208cf4a73f739706e29b8088c341",
+    "semantic_hash": "d028208cf4a73f739706e29b8088c341"
+  },
+  "cocoon/langgraph-agent/tests/test_sessions.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775502,
+    "ast_hash": "b0d373bd85ab9d27a0eafe58d163ba63",
+    "semantic_hash": "b0d373bd85ab9d27a0eafe58d163ba63"
+  },
+  "cocoon/langgraph-agent/tests/test_tasks.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755032,
+    "ast_hash": "43f36d97774f7842c6fc2decd15875c2",
+    "semantic_hash": "43f36d97774f7842c6fc2decd15875c2"
+  },
+  "cocoon/langgraph-agent/tests/test_vertex_brain_offline.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755032,
+    "ast_hash": "d015a9f556f0b3afca9d14b03caa1060",
+    "semantic_hash": "d015a9f556f0b3afca9d14b03caa1060"
+  },
+  "cocoon/livekit-voice/cocoon_voice/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755032,
+    "ast_hash": "31572ddaca79121384a7ce28ef384af4",
+    "semantic_hash": "31572ddaca79121384a7ce28ef384af4"
+  },
+  "cocoon/livekit-voice/cocoon_voice/__main__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755039,
+    "ast_hash": "852e0eccf46807fbfa0af79ec13ccb4b",
+    "semantic_hash": "852e0eccf46807fbfa0af79ec13ccb4b"
+  },
+  "cocoon/livekit-voice/cocoon_voice/acoustic_wake.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755039,
+    "ast_hash": "c16f92c138de4be5f5af7950e03880fd",
+    "semantic_hash": "c16f92c138de4be5f5af7950e03880fd"
+  },
+  "cocoon/livekit-voice/cocoon_voice/agent.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755039,
+    "ast_hash": "2a147e06c174bee863ce4933ff62dd35",
+    "semantic_hash": "2a147e06c174bee863ce4933ff62dd35"
+  },
+  "cocoon/livekit-voice/cocoon_voice/announcements.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755048,
+    "ast_hash": "9d5632fe99f217c3c03a08c3319a5b05",
+    "semantic_hash": "9d5632fe99f217c3c03a08c3319a5b05"
+  },
+  "cocoon/livekit-voice/cocoon_voice/backend_client.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755048,
+    "ast_hash": "0ee16e5356385ec6e1e77d53af75c1ee",
+    "semantic_hash": "0ee16e5356385ec6e1e77d53af75c1ee"
+  },
+  "cocoon/livekit-voice/cocoon_voice/benchmark.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755048,
+    "ast_hash": "bd33b62857f75b336bcb30bbbcdd3233",
+    "semantic_hash": "bd33b62857f75b336bcb30bbbcdd3233"
+  },
+  "cocoon/livekit-voice/cocoon_voice/bridge.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775506,
+    "ast_hash": "7e3331df44fb8997ef105c7c094d11be",
+    "semantic_hash": "7e3331df44fb8997ef105c7c094d11be"
+  },
+  "cocoon/livekit-voice/cocoon_voice/cartesia_auth.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775506,
+    "ast_hash": "133b9ea3e88dd92c05fdf6ab6e7044c1",
+    "semantic_hash": "133b9ea3e88dd92c05fdf6ab6e7044c1"
+  },
+  "cocoon/livekit-voice/cocoon_voice/config.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775506,
+    "ast_hash": "13b6217fda4ebdca3f63d0b503d32ada",
+    "semantic_hash": "13b6217fda4ebdca3f63d0b503d32ada"
+  },
+  "cocoon/livekit-voice/cocoon_voice/contract.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775507,
+    "ast_hash": "78b00072a00eaad4476df7f77af13bb1",
+    "semantic_hash": "78b00072a00eaad4476df7f77af13bb1"
+  },
+  "cocoon/livekit-voice/cocoon_voice/diagnostics.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775507,
+    "ast_hash": "a1f3e949c22c9d2df81461c53b18efe1",
+    "semantic_hash": "a1f3e949c22c9d2df81461c53b18efe1"
+  },
+  "cocoon/livekit-voice/cocoon_voice/doctor.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775507,
+    "ast_hash": "516a34181219190fab4aedfa45cfbe32",
+    "semantic_hash": "516a34181219190fab4aedfa45cfbe32"
+  },
+  "cocoon/livekit-voice/cocoon_voice/live_checks.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775508,
+    "ast_hash": "05292f4f3a7b342fbccac1adbf308f43",
+    "semantic_hash": "05292f4f3a7b342fbccac1adbf308f43"
+  },
+  "cocoon/livekit-voice/cocoon_voice/mock_backend.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775508,
+    "ast_hash": "40b0ddf9b67ae7979930de84d3e28f25",
+    "semantic_hash": "40b0ddf9b67ae7979930de84d3e28f25"
+  },
+  "cocoon/livekit-voice/cocoon_voice/noise_fixtures.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775508,
+    "ast_hash": "657e5bc27c34adceff492eecf2e15817",
+    "semantic_hash": "657e5bc27c34adceff492eecf2e15817"
+  },
+  "cocoon/livekit-voice/cocoon_voice/observability.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755089,
+    "ast_hash": "06190811316f4431b02080b4be5d6584",
+    "semantic_hash": "06190811316f4431b02080b4be5d6584"
+  },
+  "cocoon/livekit-voice/cocoon_voice/phrase_cache.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755089,
+    "ast_hash": "909324852c8ac49b6b2a7779f25cb462",
+    "semantic_hash": "909324852c8ac49b6b2a7779f25cb462"
+  },
+  "cocoon/livekit-voice/cocoon_voice/providers.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755089,
+    "ast_hash": "f05181d02711666cc38b988469c8fe7f",
+    "semantic_hash": "f05181d02711666cc38b988469c8fe7f"
+  },
+  "cocoon/livekit-voice/cocoon_voice/recording.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77551,
+    "ast_hash": "6308319d7dc44a1a3acd1eebf1a4d91e",
+    "semantic_hash": "6308319d7dc44a1a3acd1eebf1a4d91e"
+  },
+  "cocoon/livekit-voice/cocoon_voice/remote_bridge.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77551,
+    "ast_hash": "b8d2a7c4624fb933f765312fd1638199",
+    "semantic_hash": "b8d2a7c4624fb933f765312fd1638199"
+  },
+  "cocoon/livekit-voice/cocoon_voice/smoke.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77551,
+    "ast_hash": "0165c81df34f579a378ece9aacacea4a",
+    "semantic_hash": "0165c81df34f579a378ece9aacacea4a"
+  },
+  "cocoon/livekit-voice/cocoon_voice/speech_policy.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775511,
+    "ast_hash": "24a7e2b21d3f0bcad8ed780b0084e75d",
+    "semantic_hash": "24a7e2b21d3f0bcad8ed780b0084e75d"
+  },
+  "cocoon/livekit-voice/cocoon_voice/streaming.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775511,
+    "ast_hash": "bf5e200fa8f572cf73ba8eff5971f02e",
+    "semantic_hash": "bf5e200fa8f572cf73ba8eff5971f02e"
+  },
+  "cocoon/livekit-voice/cocoon_voice/wake.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775511,
+    "ast_hash": "d44b36c787b2c1f5192f4d2d6170f7fb",
+    "semantic_hash": "d44b36c787b2c1f5192f4d2d6170f7fb"
+  },
+  "cocoon/livekit-voice/pyproject.toml": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775512,
+    "ast_hash": "7ff13a134d4387c56960be4040ffbe42",
+    "semantic_hash": "7ff13a134d4387c56960be4040ffbe42"
+  },
+  "cocoon/livekit-voice/scripts/backend_probe.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775512,
+    "ast_hash": "348b3173e21d51e702ec3335b9f329fe",
+    "semantic_hash": "348b3173e21d51e702ec3335b9f329fe"
+  },
+  "cocoon/livekit-voice/scripts/cartesia_key_check.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775512,
+    "ast_hash": "f7e6c1f41b35e86d719163384db51884",
+    "semantic_hash": "f7e6c1f41b35e86d719163384db51884"
+  },
+  "cocoon/livekit-voice/scripts/dispatch.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755132,
+    "ast_hash": "b1232209edc3647dbcb6a0683d3f72b6",
+    "semantic_hash": "b1232209edc3647dbcb6a0683d3f72b6"
+  },
+  "cocoon/livekit-voice/scripts/live_probe.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755132,
+    "ast_hash": "91332384336c29e01ab8d10a17cd95ae",
+    "semantic_hash": "91332384336c29e01ab8d10a17cd95ae"
+  },
+  "cocoon/livekit-voice/scripts/make_natural_fixtures.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755132,
+    "ast_hash": "689b93b764dd4e733b1f3a731c4d3399",
+    "semantic_hash": "689b93b764dd4e733b1f3a731c4d3399"
+  },
+  "cocoon/livekit-voice/scripts/make_speech_fixtures.ps1": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755132,
+    "ast_hash": "2c68e42b7c37b04774a4cd671276beca",
+    "semantic_hash": "2c68e42b7c37b04774a4cd671276beca"
+  },
+  "cocoon/livekit-voice/tests/__init__.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755141,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "cocoon/livekit-voice/tests/conftest.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755141,
+    "ast_hash": "c40e3800592199d1a72a787a1d8b2c18",
+    "semantic_hash": "c40e3800592199d1a72a787a1d8b2c18"
+  },
+  "cocoon/livekit-voice/tests/fakes.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755141,
+    "ast_hash": "8b3471027991bc788d8c90e26dc0d6c8",
+    "semantic_hash": "8b3471027991bc788d8c90e26dc0d6c8"
+  },
+  "cocoon/livekit-voice/tests/test_acoustic_router.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755148,
+    "ast_hash": "6eb06aea259dd29e3f3171bdbfaff0ac",
+    "semantic_hash": "6eb06aea259dd29e3f3171bdbfaff0ac"
+  },
+  "cocoon/livekit-voice/tests/test_announcements.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755148,
+    "ast_hash": "bd24c98a2c461296b9157feab7097ece",
+    "semantic_hash": "bd24c98a2c461296b9157feab7097ece"
+  },
+  "cocoon/livekit-voice/tests/test_backend_client.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755148,
+    "ast_hash": "a6449a2affa95bab4f4736c028577d19",
+    "semantic_hash": "a6449a2affa95bab4f4736c028577d19"
+  },
+  "cocoon/livekit-voice/tests/test_bridge.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755158,
+    "ast_hash": "f878645315bfada53b7b49818be91e49",
+    "semantic_hash": "f878645315bfada53b7b49818be91e49"
+  },
+  "cocoon/livekit-voice/tests/test_cartesia_auth.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755158,
+    "ast_hash": "0f45179aae90ed607f494c3f8733d403",
+    "semantic_hash": "0f45179aae90ed607f494c3f8733d403"
+  },
+  "cocoon/livekit-voice/tests/test_config.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755158,
+    "ast_hash": "9a69cad59f3cee177c02a87845d1d59b",
+    "semantic_hash": "9a69cad59f3cee177c02a87845d1d59b"
+  },
+  "cocoon/livekit-voice/tests/test_contract.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775517,
+    "ast_hash": "5c0192ba7bbd197d741b8b2c2bbab705",
+    "semantic_hash": "5c0192ba7bbd197d741b8b2c2bbab705"
+  },
+  "cocoon/livekit-voice/tests/test_controller.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775517,
+    "ast_hash": "40460edcfdadd292cc0a48b324d96c57",
+    "semantic_hash": "40460edcfdadd292cc0a48b324d96c57"
+  },
+  "cocoon/livekit-voice/tests/test_integration_backend.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775517,
+    "ast_hash": "5e0251dbe5cf1609be8e546ff4d103e8",
+    "semantic_hash": "5e0251dbe5cf1609be8e546ff4d103e8"
+  },
+  "cocoon/livekit-voice/tests/test_livekit_wakeword.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775518,
+    "ast_hash": "abce2cf31632b357a23bebcd0ad44e2b",
+    "semantic_hash": "abce2cf31632b357a23bebcd0ad44e2b"
+  },
+  "cocoon/livekit-voice/tests/test_noise_vad.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775518,
+    "ast_hash": "8895cf317bf64d6f6ae38051f6d671c9",
+    "semantic_hash": "8895cf317bf64d6f6ae38051f6d671c9"
+  },
+  "cocoon/livekit-voice/tests/test_observability.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775518,
+    "ast_hash": "a3f050353f8615736046e422a9d15908",
+    "semantic_hash": "a3f050353f8615736046e422a9d15908"
+  },
+  "cocoon/livekit-voice/tests/test_streaming.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775519,
+    "ast_hash": "1ab362dcdd7b1d5926e590ce7ef44ac6",
+    "semantic_hash": "1ab362dcdd7b1d5926e590ce7ef44ac6"
+  },
+  "cocoon/livekit-voice/tests/test_wake.py": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775519,
+    "ast_hash": "d80df5bd6a376f150ad97cc4ffc78bec",
+    "semantic_hash": "d80df5bd6a376f150ad97cc4ffc78bec"
+  },
+  "ml/task_estimator.py": {
+    "mtime": 1790223322.5588474,
+    "seen": 1790231473.775527,
+    "ast_hash": "1a0254cd5de0e3613514338df15f5e55",
+    "semantic_hash": "1a0254cd5de0e3613514338df15f5e55"
+  },
+  "models/task_benchmark_v1.json": {
+    "mtime": 1790223330.163237,
+    "seen": 1790231473.775529,
+    "ast_hash": "ef09e9390b5671bc06d4646b569fe9b9",
+    "semantic_hash": "ef09e9390b5671bc06d4646b569fe9b9"
+  },
+  "models/task_estimator_v1.json": {
+    "mtime": 1790223330.1631021,
+    "seen": 1790231473.775529,
+    "ast_hash": "fc13040981929cba8c82a7461b4ec49d",
+    "semantic_hash": "fc13040981929cba8c82a7461b4ec49d"
+  },
+  "scripts/cocoon_bridge.py": {
+    "mtime": 1790229746.3039422,
+    "seen": 1790231473.77553,
+    "ast_hash": "e17de87ff2b32ccc1441013f7c4dcb5f",
+    "semantic_hash": "e17de87ff2b32ccc1441013f7c4dcb5f"
+  },
+  "scripts/run_cocoon_backend.sh": {
+    "mtime": 1790229898.2933342,
+    "seen": 1790231473.77553,
+    "ast_hash": "4e5aa39042ea6aa0a7904b45c38eed53",
+    "semantic_hash": "4e5aa39042ea6aa0a7904b45c38eed53"
+  },
+  "cocoon/API_CONTRACT.md": {
+    "mtime": 1790229181.4595582,
+    "seen": 1790231473.775537,
+    "ast_hash": "af3a701810d2301ee1432bb1114666f6",
+    "semantic_hash": "af3a701810d2301ee1432bb1114666f6"
+  },
+  "cocoon/BACKEND_IMPLEMENTATION_PLAN.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775538,
+    "ast_hash": "4784271ccf5d329b39f9f625067267e2",
+    "semantic_hash": "4784271ccf5d329b39f9f625067267e2"
+  },
+  "cocoon/README.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775538,
+    "ast_hash": "277f361a2f057b8dacb65504280fa4db",
+    "semantic_hash": "277f361a2f057b8dacb65504280fa4db"
+  },
+  "cocoon/contracts/openapi.yaml": {
+    "mtime": 1790229747.2944274,
+    "seen": 1790231473.775538,
+    "ast_hash": "5358d3a5e3c6192dc96d69209ad29fa5",
+    "semantic_hash": "5358d3a5e3c6192dc96d69209ad29fa5"
+  },
+  "cocoon/contracts/proposed/README.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775539,
+    "ast_hash": "585a4c208d357ed0616b729bfe9387e6",
+    "semantic_hash": "585a4c208d357ed0616b729bfe9387e6"
+  },
+  "cocoon/langgraph-agent/BACKEND_FAST_TRACK_PLAN.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775539,
+    "ast_hash": "2d0f98acf65c1ac6f00aefd23e7b5f7b",
+    "semantic_hash": "2d0f98acf65c1ac6f00aefd23e7b5f7b"
+  },
+  "cocoon/langgraph-agent/CLAUDE.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775539,
+    "ast_hash": "d9a388aa7fc16e17e52981f77cf53931",
+    "semantic_hash": "d9a388aa7fc16e17e52981f77cf53931"
+  },
+  "cocoon/langgraph-agent/README.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755399,
+    "ast_hash": "6546f2f63a4c7d318832e954c121c0dd",
+    "semantic_hash": "6546f2f63a4c7d318832e954c121c0dd"
+  },
+  "cocoon/langgraph-agent/cocoon_agent/insights/dashboard.html": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755399,
+    "ast_hash": "37a017b2c33eaf5293c6aa3021c93fe1",
+    "semantic_hash": "37a017b2c33eaf5293c6aa3021c93fe1"
+  },
+  "cocoon/langgraph-agent/docs/DATA_GAPS.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755399,
+    "ast_hash": "827c850e7f45f29f0c8eec448267f932",
+    "semantic_hash": "827c850e7f45f29f0c8eec448267f932"
+  },
+  "cocoon/langgraph-agent/docs/FEATURE_MATRIX.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775541,
+    "ast_hash": "a8eff0fa3b084f5068fab0eb5353bf69",
+    "semantic_hash": "a8eff0fa3b084f5068fab0eb5353bf69"
+  },
+  "cocoon/langgraph-agent/docs/HANDOFF.md": {
+    "mtime": 1790229874.2742722,
+    "seen": 1790231473.775541,
+    "ast_hash": "231ffb69eabc9e842c790c5d6d980ba7",
+    "semantic_hash": "231ffb69eabc9e842c790c5d6d980ba7"
+  },
+  "cocoon/langgraph-agent/docs/INSIGHTS.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775541,
+    "ast_hash": "2c7be36a0f092c418334472b4812a9f8",
+    "semantic_hash": "2c7be36a0f092c418334472b4812a9f8"
+  },
+  "cocoon/langgraph-agent/docs/MIGRATIONS.md": {
+    "mtime": 1790229874.2741146,
+    "seen": 1790231473.775542,
+    "ast_hash": "6fd93987122d4ec9566a7d194f26f1b9",
+    "semantic_hash": "6fd93987122d4ec9566a7d194f26f1b9"
+  },
+  "cocoon/langgraph-agent/docs/VOICE_INTEGRATION.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775542,
+    "ast_hash": "bde8845d15d04b8cc65742db63e2dcce",
+    "semantic_hash": "bde8845d15d04b8cc65742db63e2dcce"
+  },
+  "cocoon/langgraph-agent/requirements-dev.txt": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775542,
+    "ast_hash": "f71e5bdaff02a4146c4cc6719c7173c3",
+    "semantic_hash": "f71e5bdaff02a4146c4cc6719c7173c3"
+  },
+  "cocoon/langgraph-agent/requirements-insights.txt": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775543,
+    "ast_hash": "589948caefaae574ed9389e138e29ee6",
+    "semantic_hash": "589948caefaae574ed9389e138e29ee6"
+  },
+  "cocoon/langgraph-agent/requirements.txt": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775543,
+    "ast_hash": "f89effc7606ffe87e2120f8b77aa8fad",
+    "semantic_hash": "f89effc7606ffe87e2120f8b77aa8fad"
+  },
+  "cocoon/livekit-voice/CLAUDE.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775543,
+    "ast_hash": "30ce34ae892b17daa283c37f9ef883d9",
+    "semantic_hash": "30ce34ae892b17daa283c37f9ef883d9"
+  },
+  "cocoon/livekit-voice/README.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.7755442,
+    "ast_hash": "e503b4bcdf82baa27c2176607fb2038c",
+    "semantic_hash": "e503b4bcdf82baa27c2176607fb2038c"
+  },
+  "cocoon/livekit-voice/docs/voice-latency-report.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775548,
+    "ast_hash": "dcae5d173555d7d2e3eaff46c0907b0e",
+    "semantic_hash": "dcae5d173555d7d2e3eaff46c0907b0e"
+  },
+  "cocoon/livekit-voice/docs/work-log.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775548,
+    "ast_hash": "1eb05445c98f78932a9fd51919516ab7",
+    "semantic_hash": "1eb05445c98f78932a9fd51919516ab7"
+  },
+  "cocoon/livekit-voice/requirements-dev.txt": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775548,
+    "ast_hash": "e1724f6c0e451fce9b095d2591c95c27",
+    "semantic_hash": "e1724f6c0e451fce9b095d2591c95c27"
+  },
+  "cocoon/livekit-voice/requirements.txt": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775549,
+    "ast_hash": "2a6c50b16bf0989c2a82b233dc0d229e",
+    "semantic_hash": "2a6c50b16bf0989c2a82b233dc0d229e"
+  },
+  "cocoon/livekit-voice/tests/fixtures/wakeword/NOTICE.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775549,
+    "ast_hash": "652df2a9564a65dae45a20971247288b",
+    "semantic_hash": "652df2a9564a65dae45a20971247288b"
+  },
+  "cocoon/livekit-voice/wakeword/README.md": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.775549,
+    "ast_hash": "201e92f5b7c5e149780a1c8e9743d0ab",
+    "semantic_hash": "201e92f5b7c5e149780a1c8e9743d0ab"
+  },
+  "cocoon/livekit-voice/wakeword/hey_cat.yaml": {
+    "mtime": 1790205892.0,
+    "seen": 1790231473.77555,
+    "ast_hash": "9111af354a0ec0a2e9cbb985dcdff7f1",
+    "semantic_hash": "9111af354a0ec0a2e9cbb985dcdff7f1"
+  },
+  "docs/SIMULATION_GUIDE.md": {
+    "mtime": 1790224820.9376588,
+    "seen": 1790231473.775551,
+    "ast_hash": "b9ad5b5b80ca54cba4c85ef80b281cd4",
+    "semantic_hash": "b9ad5b5b80ca54cba4c85ef80b281cd4"
   }
 }

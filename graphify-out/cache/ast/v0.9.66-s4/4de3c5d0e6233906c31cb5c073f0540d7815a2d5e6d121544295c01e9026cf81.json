@@ -1,0 +1,1 @@
+{"nodes": [{"id": "pkg_cocoon_voice", "label": "cocoon-voice", "file_type": "code", "type": "package", "ecosystem": "python", "source_file": "cocoon/livekit-voice/pyproject.toml", "source_location": "L1", "version": "0.1.0"}], "edges": []}

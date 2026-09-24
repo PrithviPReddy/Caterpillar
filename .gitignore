@@ -7,3 +7,8 @@ __pycache__/
 
 # generated at runtime / by ml.train (regenerate with: python -m ml.train)
 data/
+
+# Cocoon backend copy (cocoon/): local dataset link and runtime databases
+cocoon/Cocoon_Dataset_v1
+cocoon/langgraph-agent/data/
+cocoon/langgraph-agent/.env

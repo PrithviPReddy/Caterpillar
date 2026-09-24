@@ -102,6 +102,8 @@ class Event(BaseModel):
     incident_id: str | None = Field(None, description="Black-box recording id (safety incidents)")
     dtc: dict | None = Field(None, description="Diagnostic trouble code {spn, fmi}")
     related_incident_keys: list[str] = Field(default_factory=list)
+    one_shot: bool = Field(False, description="A point-in-time notice (briefing, hot shutdown, scorecard): it is "
+                                              "emitted once as `open` and never resolved")
 
 
 class AgentMessage(BaseModel):

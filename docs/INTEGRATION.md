@@ -129,34 +129,32 @@ Every endpoint is read-only JSON on `http://localhost:8100`.
 
 ## 7. Cocoon backend (langgraph-agent)
 
-### Live telemetry bridge
+### Live bridge: telemetry and detected alerts
 
-`scripts/cocoon_bridge.py` streams the simulator into the Cocoon backend through the v1 contract: `POST /v1/sessions/{session_id}/telemetry`. The backend's own rules then run on physics-driven data:
-- seatbelt with the engine on
-- idle for 5 min
-- idle and unbuckled for 60 s
+`scripts/cocoon_bridge.py` streams the simulator into the Cocoon backend:
+- **Telemetry:** `POST /v1/sessions/{id}/telemetry` for EXC001, mapped to `EXC_DEMO_001 / OP_DEMO_1_1`. The backend's own rules (seatbelt, idle, idle-unbuckled) run on it. It includes `seat_occupied`, so a machine left running with nobody in the seat is not reported as an unbuckled operator.
+- **Detected alerts:** `POST /v1/sessions/{id}/detections` for every alert our detection layer raises for EXC001 or the whole site (proximity, stability, power line, ML health, fuel, weather, fatigue …). The backend turns each into an alert episode, an announcement the voice worker speaks, and "Why?" evidence.
+  - Not forwarded: seatbelt, excessive idle and the shift briefing, which the backend already does itself.
+  - Also not forwarded: `update` events.
+  - One-off notices (hot shutdown, scorecard) are sent with `one_shot: true`.
 
 ```bash
-export COCOON_SERVICE_TOKEN=dev-local-change-me          # same value as langgraph-agent/.env
-./run_demo.sh --cocoon                                   # or: python scripts/cocoon_bridge.py
+./run_demo.sh --cocoon      # starts the local backend copy (cocoon/) if nothing runs on :8000, then the bridge
+scripts/run_cocoon_backend.sh                                    # just the backend (mock LLM mode, :8000)
 python scripts/cocoon_bridge.py --session EXC_DEMO_001=ses_...   # post into the phone's session
 ```
 
-- **IDs.** Sim IDs are mapped to catalog IDs in the bridge. The default is `EXC001 → EXC_DEMO_001 / OP_DEMO_1_1`. Add trucks with `--map TRK01=TRK_DEMO_001:OP_DEMO_4_1`.
-- **Time.** Sim time is site-local (Asia/Kolkata), re-dated onto today and sent in UTC.
-  - Each session has its own clock that never goes backwards. A sim reset continues on the next day, and a restarted bridge resumes after the session's newest sample. The backend never marks a sample stale.
-- **Volume.** A sample is sent when engine, belt, operating state or speed band changes, plus a heartbeat every 30 simulated seconds.
-- **Ports.** This project's API is now on **:8100**, because the backend uses :8000.
+- **Capabilities:** the bridge reads the backend's `/openapi.json`. Against a backend without the detections route (Developer B's version before D1), it sends telemetry only, without `seat_occupied`.
+- **Time:** sim time is site-local (Asia/Kolkata), re-dated onto today, sent in UTC, and never moves backwards within a session.
+- **Ports:** this project's API is on **:8100**; the backend is on :8000.
 
-On the demo day, the backend opens:
-- a seatbelt episode at 06:40, with an incident draft
-- idle-unbuckled and prolonged-idle episodes at 12:00–12:05
+**The backend change (D1).** `cocoon/` is a copy of the team's Cocoon project with D1 applied:
+- the detections route
+- `seat_occupied`
+- a "Why?" fix
+- schema v8, contracts, docs and tests (320 backend tests pass; the voice worker's contract test passes)
 
-"Why?" answers from the bridged evidence.
-
-**Known v1 limits:**
-- The readings have no `seat_occupied` field. An unattended running machine (12:00, lunch) is reported as unbuckled, so the backend warns about the seatbelt although nobody is in the cab. An optional `seat_occupied` reading would fix this, and it is an additive change.
-- The other detectors (proximity, ML health, fuel, weather, fatigue and more) have no route into the backend yet. See the proposed detections endpoint.
+`docs/cocoon_D1_detections.patch` is the same change as a patch that applies to the original project (`patch -p1` from its root), for Developer B to review. Details are in `cocoon/API_CONTRACT.md` ("Detections from the simulator's detection layer") and `cocoon/langgraph-agent/docs/HANDOFF.md` (D1).
 
 ### Task-time estimator (REQ-05a / REQ-05b)
 
