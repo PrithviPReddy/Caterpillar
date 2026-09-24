@@ -17,7 +17,7 @@ Pick one method.
 ```python
 import json, requests
 
-with requests.get("http://localhost:8000/api/stream",
+with requests.get("http://localhost:8100/api/stream",
                   params={"min_severity": "warning", "statuses": "open,escalated"},
                   stream=True) as r:
     buf = []
@@ -32,7 +32,7 @@ with requests.get("http://localhost:8000/api/stream",
 **Webhook.** Your agent exposes an HTTP endpoint and the server posts each event to it as JSON:
 
 ```bash
-curl -X POST localhost:8000/api/agent/webhook -H 'content-type: application/json' \
+curl -X POST localhost:8100/api/agent/webhook -H 'content-type: application/json' \
      -d '{"url": "http://localhost:8123/events", "min_severity": "warning"}'
 ```
 
@@ -41,7 +41,7 @@ curl -X POST localhost:8000/api/agent/webhook -H 'content-type: application/json
 ## 2. Reply to the operator
 
 ```bash
-curl -X POST localhost:8000/api/agent/messages -H 'content-type: application/json' -d '{
+curl -X POST localhost:8100/api/agent/messages -H 'content-type: application/json' -d '{
   "event_id": "EVT-000041",
   "incident_key": "EXC001:COOLING_DEGRADATION_DETECTED",
   "machine_id": "EXC001",
@@ -84,7 +84,7 @@ Site-wide events such as lightning and wind use `machine_id: "SITE"`.
 
 ## 4. Tools the agent can call
 
-Every endpoint is read-only JSON on `http://localhost:8000`.
+Every endpoint is read-only JSON on `http://localhost:8100`.
 
 | Tool | Endpoint | Use it for |
 |---|---|---|
@@ -126,3 +126,58 @@ Every endpoint is read-only JSON on `http://localhost:8000`.
 | 14:30 | EXC002 | WATER_IN_FUEL_RISING | Drain the separator; suspect the fuel batch |
 | 15:20 → 15:31 | SITE | LIGHTNING_NEARBY | Lower booms; ground crew take shelter |
 | 16:00 | EXC001 | HOT_SHUTDOWN, SHIFT_SUMMARY | Coaching debrief and training modules |
+
+## 7. Cocoon backend (langgraph-agent)
+
+### Live telemetry bridge
+
+`scripts/cocoon_bridge.py` streams the simulator into the Cocoon backend through the v1 contract: `POST /v1/sessions/{session_id}/telemetry`. The backend's own rules then run on physics-driven data:
+- seatbelt with the engine on
+- idle for 5 min
+- idle and unbuckled for 60 s
+
+```bash
+export COCOON_SERVICE_TOKEN=dev-local-change-me          # same value as langgraph-agent/.env
+./run_demo.sh --cocoon                                   # or: python scripts/cocoon_bridge.py
+python scripts/cocoon_bridge.py --session EXC_DEMO_001=ses_...   # post into the phone's session
+```
+
+- **IDs.** Sim IDs are mapped to catalog IDs in the bridge. The default is `EXC001 → EXC_DEMO_001 / OP_DEMO_1_1`. Add trucks with `--map TRK01=TRK_DEMO_001:OP_DEMO_4_1`.
+- **Time.** Sim time is site-local (Asia/Kolkata), re-dated onto today and sent in UTC.
+  - Each session has its own clock that never goes backwards. A sim reset continues on the next day, and a restarted bridge resumes after the session's newest sample. The backend never marks a sample stale.
+- **Volume.** A sample is sent when engine, belt, operating state or speed band changes, plus a heartbeat every 30 simulated seconds.
+- **Ports.** This project's API is now on **:8100**, because the backend uses :8000.
+
+On the demo day, the backend opens:
+- a seatbelt episode at 06:40, with an incident draft
+- idle-unbuckled and prolonged-idle episodes at 12:00–12:05
+
+"Why?" answers from the bridged evidence.
+
+**Known v1 limits:**
+- The readings have no `seat_occupied` field. An unattended running machine (12:00, lunch) is reported as unbuckled, so the backend warns about the seatbelt although nobody is in the cab. An optional `seat_occupied` reading would fix this, and it is an additive change.
+- The other detectors (proximity, ML health, fuel, weather, fatigue and more) have no route into the backend yet. See the proposed detections endpoint.
+
+### Task-time estimator (REQ-05a / REQ-05b)
+
+`python -m ml.task_estimator` calibrates on `Cocoon_Dataset_v1/data/generated/task_history.csv` and writes two files:
+- `models/task_estimator_v1.json`: the model
+- `models/task_benchmark_v1.json`: its evaluation
+
+`ml.task_estimator.predict(model, task)` uses only the standard library, so the backend can import it or copy it.
+
+- **Model:** `minutes = quantity / rate[type] × skill × weather × ground`, ridge-fitted in log space. Every prediction lists each multiplier and the minutes it adds ("beginner +12.9 min, rain +5.0 min"), plus an 80% range.
+- **Reduced configuration (the five provided rows):** those rows have no quantity or ground condition, so the planner's estimate stands in for quantity / rate. Nothing is filled in.
+- **Machine age** is not used. Each dataset machine has one age and its own task types, so an age effect can't be learned. Every prediction says so.
+
+| | MAE |
+|---|---|
+| Holdout, last 6 of 30 days (n = 235): planner estimate | 6.81 min |
+| Holdout: estimator | 2.31 min |
+| Five provided tasks: planner | 7.6 min |
+| Five provided tasks: estimator, frozen before scoring | 5.26 min |
+
+**Caveats (in the report JSON):**
+- n = 5.
+- The dataset's skill and rain effects are generator assumptions, so the five-task result is a consistency check, not independent validation.
+- The dataset has no wind effect, so T005 (windy, +15 min) stays unexplained.

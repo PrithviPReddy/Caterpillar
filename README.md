@@ -9,7 +9,7 @@ Nothing in the demo is a scripted alert. The scenario only injects *causes*: a r
 ```bash
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -r requirements.txt
 .venv/bin/python -m ml.train        # ~3 min: generates 30 simulated days, trains, evaluates
-./run_demo.sh                       # API :8000, mock agent, UI http://localhost:8501
+./run_demo.sh                       # API :8100, mock agent, UI http://localhost:8501
 ```
 
 `./run_demo.sh --no-agent` skips the mock agent. Use it when the real LangGraph agent is connected (see [docs/INTEGRATION.md](docs/INTEGRATION.md)).
@@ -45,7 +45,7 @@ To run a full day without the UI and print the alert timeline (about 15 s): `.ve
   - fuel theft while parked
   - engine starts outside the shift
   - frozen or implausible sensors
-- **Task time estimation:** an ML model trained on 5,000 simulated tasks (volume, soil, task type, trucks, haul distance, weather, operator). It has 7% error, against 30% for the planner's rule of thumb.
+- **Task time estimation:** `ml/task_estimator.py`, calibrated on Cocoon_Dataset_v1 (holdout MAE 2.3 min vs 6.8 for the planner; 5 provided tasks: 5.3 vs 7.6 min), with a factor breakdown per task. The simulator's own plan uses an ML model trained on 5,000 simulated tasks (volume, soil, task type, trucks, haul distance, weather, operator). It has 7% error, against 30% for the planner's rule of thumb.
 - **Operator training hub link:** every behaviour maps to a training module (TM-01…TM-11). An end-of-shift scorecard recommends modules.
 - **Predictive maintenance:**
   - ML early warnings for cooling, oil supply and combustion efficiency

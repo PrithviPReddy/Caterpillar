@@ -10,11 +10,12 @@ Replace `compose()` with a call into the LangGraph graph; everything else stays.
 
 import argparse
 import json
+import os
 import time
 
 import requests
 
-API = "http://localhost:8000"
+API = os.environ.get("COPILOT_API", "http://localhost:8100")
 
 TONE = {
     "safety": "Safety first",

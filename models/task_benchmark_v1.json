@@ -1,0 +1,126 @@
+{
+  "estimator_version": "task-estimator-v1",
+  "holdout": {
+    "split": "time-based, last 6 of 30 days (n=235)",
+    "planner_estimate": {
+      "n": 235,
+      "mae_min": 6.81,
+      "mape_pct": 14.3
+    },
+    "full": {
+      "n": 235,
+      "mae_min": 2.31,
+      "mape_pct": 4.8
+    },
+    "reduced": {
+      "n": 235,
+      "mae_min": 2.33,
+      "mape_pct": 4.8
+    },
+    "range_80_coverage": 0.779
+  },
+  "benchmark_five_tasks": {
+    "planner_mae_min": 7.6,
+    "model_mae_min": 5.26,
+    "configuration": "reduced (no quantity or ground condition in these rows)",
+    "rows": [
+      {
+        "task_id": "T001",
+        "task_type": "Earth Excavation",
+        "weather": "Sunny",
+        "operator_skill": "Expert",
+        "planner_min": 60.0,
+        "actual_min": 58.0,
+        "model_min": 53.5,
+        "range_80_min": [
+          49.7,
+          57.5
+        ],
+        "planner_err": 2.0,
+        "model_err": 4.5,
+        "adding_time": [
+          "expert -6.5 min"
+        ]
+      },
+      {
+        "task_id": "T002",
+        "task_type": "Trenching",
+        "weather": "Rainy",
+        "operator_skill": "Intermediate",
+        "planner_min": 45.0,
+        "actual_min": 52.0,
+        "model_min": 53.3,
+        "range_80_min": [
+          49.5,
+          57.4
+        ],
+        "planner_err": 7.0,
+        "model_err": 1.3,
+        "adding_time": [
+          "rainy +8.1 min"
+        ]
+      },
+      {
+        "task_id": "T003",
+        "task_type": "Material Loading",
+        "weather": "Cloudy",
+        "operator_skill": "Beginner",
+        "planner_min": 30.0,
+        "actual_min": 42.0,
+        "model_min": 38.5,
+        "range_80_min": [
+          35.8,
+          41.4
+        ],
+        "planner_err": 12.0,
+        "model_err": 3.5,
+        "adding_time": [
+          "beginner +8.7 min",
+          "cloudy -0.2 min"
+        ]
+      },
+      {
+        "task_id": "T004",
+        "task_type": "Grading",
+        "weather": "Sunny",
+        "operator_skill": "Expert",
+        "planner_min": 35.0,
+        "actual_min": 33.0,
+        "model_min": 31.2,
+        "range_80_min": [
+          29.0,
+          33.6
+        ],
+        "planner_err": 2.0,
+        "model_err": 1.8,
+        "adding_time": [
+          "expert -3.8 min"
+        ]
+      },
+      {
+        "task_id": "T005",
+        "task_type": "Demolition",
+        "weather": "Windy",
+        "operator_skill": "Intermediate",
+        "planner_min": 90.0,
+        "actual_min": 105.0,
+        "model_min": 89.8,
+        "range_80_min": [
+          83.5,
+          96.7
+        ],
+        "planner_err": 15.0,
+        "model_err": 15.2,
+        "adding_time": [
+          "windy -0.5 min"
+        ]
+      }
+    ],
+    "caveats": [
+      "n = 5: too few rows to claim a real-world accuracy.",
+      "The model was never fitted on these rows; it was frozen before scoring them.",
+      "The dataset's skill and rain effects are generator assumptions that may have been informed by the same five rows, so this is a consistency check, not independent validation.",
+      "The dataset has no wind effect; T005 (windy) is not explained by the model."
+    ]
+  }
+}

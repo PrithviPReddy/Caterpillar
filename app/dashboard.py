@@ -1,6 +1,6 @@
 """Operator Copilot - demo UI.
 
-    streamlit run app/dashboard.py        (needs the API: uvicorn server.api:app --port 8000)
+    streamlit run app/dashboard.py        (needs the API: uvicorn server.api:app --port 8100)
 """
 
 import os
@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app import ui  # noqa: E402
 
-API = os.environ.get("COPILOT_API", "http://localhost:8000")
+API = os.environ.get("COPILOT_API", "http://localhost:8100")
 
 st.set_page_config(page_title="Operator Copilot", page_icon="🚜", layout="wide", initial_sidebar_state="expanded")
 ui.inject_css()
@@ -74,7 +74,7 @@ with st.sidebar:
     st.write("")
     page = st.radio("View", PAGES, key="page", label_visibility="collapsed")
     if status is None:
-        st.error(f"API not reachable at {API}. Start it with `uvicorn server.api:app --port 8000`.")
+        st.error(f"API not reachable at {API}. Start it with `uvicorn server.api:app --port 8100`.")
         st.stop()
     static = site_static(st.session_state.get("nonce", 0))
     machine_ids = list(static["plans"]) if static else []

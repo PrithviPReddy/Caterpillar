@@ -1,0 +1,89 @@
+{
+  "version": "task-estimator-v1",
+  "dataset": {
+    "name": "Cocoon_Dataset_v1",
+    "manifest_sha256": "5d7de31c1856daf4179110a653d175891a102a53263356843792dd383f40e42d",
+    "rows_used": 1184,
+    "rows_excluded_idle": 30,
+    "origin": "synthetic"
+  },
+  "full": {
+    "task_types": {
+      "backfilling": {
+        "rate_per_min": 0.8965,
+        "unit": "m3"
+      },
+      "demolition": {
+        "rate_per_min": 0.597145,
+        "unit": "m3"
+      },
+      "earth_excavation": {
+        "rate_per_min": 1.988576,
+        "unit": "m3"
+      },
+      "grading": {
+        "rate_per_min": 9.98362,
+        "unit": "m2"
+      },
+      "material_hauling": {
+        "rate_per_min": 13.961363,
+        "unit": "t_km"
+      },
+      "material_loading": {
+        "rate_per_min": 2.987582,
+        "unit": "t"
+      },
+      "material_pushing": {
+        "rate_per_min": 2.969661,
+        "unit": "m3"
+      },
+      "stockpiling": {
+        "rate_per_min": 2.279933,
+        "unit": "m3"
+      },
+      "trenching": {
+        "rate_per_min": 0.80275,
+        "unit": "m"
+      },
+      "utility_trenching": {
+        "rate_per_min": 0.452022,
+        "unit": "m"
+      }
+    },
+    "coef": {
+      "operator_skill": {
+        "beginner": 0.2513,
+        "expert": -0.1191
+      },
+      "weather": {
+        "cloudy": -0.0054,
+        "rainy": 0.0831,
+        "windy": -0.0049
+      },
+      "ground_condition": {
+        "wet": 0.0831
+      }
+    },
+    "sigma_log": 0.0575
+  },
+  "reduced": {
+    "coef": {
+      "operator_skill": {
+        "beginner": 0.255,
+        "expert": -0.1155,
+        "intermediate": 0.0034
+      },
+      "weather": {
+        "cloudy": -0.0056,
+        "rainy": 0.1658,
+        "windy": -0.0052
+      }
+    },
+    "sigma_log": 0.0574
+  },
+  "age_policy": "not used: each dataset machine has a single age and its own task types, so an age effect cannot be separated from task type",
+  "notes": [
+    "Durations in task_history are constructed by the dataset generator, not measured.",
+    "ground_condition is wet exactly when weather is rainy in the dataset, so their split is not identifiable."
+  ]
+}

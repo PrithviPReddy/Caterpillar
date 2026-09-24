@@ -1,6 +1,6 @@
 """FastAPI server: live telemetry, the event stream for the LangGraph agent, and controls.
 
-    uvicorn server.api:app --port 8000
+    uvicorn server.api:app --port 8100
 
 Agent integration (pick one):
   * SSE:     GET  /api/stream?min_severity=warning      (text/event-stream, one Event per message)
