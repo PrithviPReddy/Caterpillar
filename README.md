@@ -4,6 +4,8 @@ A physics-based simulator of a construction site (two excavators, three haul tru
 
 Nothing in the demo is a scripted alert. The scenario only injects *causes*: a radiator slowly clogging, a surveyor walking behind the counterweight, a truck's transmission failing, an operator who skips the warm-up. Every alert is **detected from telemetry alone**, and the detectors never see the hidden state.
 
+For a full walkthrough of how the simulation, detection, ML and serving layers work, read [docs/SIMULATION_GUIDE.md](docs/SIMULATION_GUIDE.md).
+
 ## Quick start
 
 ```bash
