@@ -1,2 +1,0 @@
-# Byte-exact test fixtures: their SHA-256 digests are pinned, so Git must never convert line endings.
-* -text
